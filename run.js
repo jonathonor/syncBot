@@ -11,15 +11,17 @@ client.on('ready', () => {
 });
 
 client.on('message', msg => {
-    if (msg.content.startsWith('!add')) {
-        let member = msg.mentions.members.first();
-        let role = msg.mentions.roles.first();
-        addRole(member, role);
-    }
-    if (msg.content.startsWith('!remove')) {
-        let member = msg.mentions.members.first();
-        let role = msg.mentions.roles.first();
-        removeRole(member, role);
+    if (verifyUser(msg.author.id)) {
+        if (msg.content.startsWith('!add')) {
+            let member = msg.mentions.members.first();
+            let role = msg.mentions.roles.first();
+            addRole(member, role);
+        }
+        if (msg.content.startsWith('!remove')) {
+            let member = msg.mentions.members.first();
+            let role = msg.mentions.roles.first();
+            removeRole(member, role);
+        }
     }
 });
 
@@ -45,6 +47,13 @@ removeRole = (member, role) => {
     if (member2) {
         member2.removeRole(roleToAddId2).catch(err => console.log(err));
     }
+}
+
+verifyUser = (id) => {
+    const guild = client.guilds.find(guild => guild.id === config.server1id);
+    let member = guild.members.find(member => member.id === id);
+
+    return member.roles.find(role => role.name === config.commanderRole);
 }
 
 client.login(config.token);
