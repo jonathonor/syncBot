@@ -1,10 +1,17 @@
 # syncBot
 A bot that syncs roles between two discord servers.
 
-To Use
+Clone this repo to wherever you want the bot to run.
+example : 
+    cd /Documents
+    git clone https://github.com/jonathonor/syncBot.git
+    cd syncBot
+    node run.js
+
+To Create a discord dev application if you don't have one (you need the token)
 1. Create a Discord Bot at https://discordapp.com/developers/applications
 2. Click New Application
-3. On the left had side click Bot
+3. On the left hand side click Bot
 4. Click Ok
 5. Copy Bot Token into config.json
 6. Click OAuth2 in the left sidebar
