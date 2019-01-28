@@ -2,11 +2,11 @@
 A bot that syncs roles between two discord servers.
 
 Clone this repo to wherever you want the bot to run.
-example : 
-    cd /Documents
-    git clone https://github.com/jonathonor/syncBot.git
-    cd syncBot
-    node run.js
+- example -
+    - cd /Documents
+    - git clone https://github.com/jonathonor/syncBot.git
+    - cd syncBot
+    - node run.js
 
 To Create a discord dev application if you don't have one (you need the token)
 1. Create a Discord Bot at https://discordapp.com/developers/applications
@@ -25,8 +25,8 @@ and then clicking "Copy Id"
 13. IMPORTANT: Make sure the bot's role in your discord server is located above the roles you want synced in the role heirarchy. (The bots role should be the same name as what you named the bot)
 
 Now you are ready to use the commands to add and remove roles in both servers.
-!add @username @role-name 
-    will add the role with role name to the user in both servers.
-!remove @username @role-name
-    will remove the role with the role name from the user in both servers
+- !add @username @role-name 
+    - will add the role with role name to the user in both servers.
+- !remove @username @role-name
+    - will remove the role with the role name from the user in both servers
 
