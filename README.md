@@ -15,7 +15,7 @@ To Create a discord dev application if you don't have one (you need the token)
 4. Click Ok
 5. Copy Bot Token into config.json
 6. Click OAuth2 in the left sidebar
-7. Click in the scopes section "bot" and in the bot permissions section "manage roles"
+7. Click in the scopes section "bot" and in the bot permissions section "manage roles" & "view audit log"
 8. Copy the URL in the bottom of the "scopes" section and paste it into your web browser
 9. You will need to use the url to invite the bot to both servers you want synced
 10. Enable discord developer mode. https://discordia.me/developer-mode
