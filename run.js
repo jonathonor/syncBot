@@ -14,14 +14,14 @@ client.on('message', msg => {
     if (msg.content.startsWith('!add')) {
         if (verifyUser(msg.author.id)) {
             let member = msg.mentions.members.first();
-            let role = msg.mentions.roles.first();
+            let role = msg.mentions.roles.first().id;
             addRole(member, role);
         }
     }
     if (msg.content.startsWith('!remove')) {
         if (verifyUser(msg.author.id)) {
             let member = msg.mentions.members.first();
-            let role = msg.mentions.roles.first();
+            let role = msg.mentions.roles.first().id;
             removeRole(member, role);
         }
     }
@@ -50,23 +50,34 @@ client.on('guildMemberUpdate', update => {
 
 addRole = (member, roleId) => {
     const guild1 = client.guilds.find(guild => guild.id === config.server1id);
+    const logChannel = guild1.channels.find(channel => channel.id === config.logChannelId);
     const roleToAdd1 = guild1.roles.find(r => r.id === roleId);
+    member.addRole(roleToAdd1).catch(err => console.log(err));
     const guild2 = client.guilds.find(guild => guild.id === config.server2id);
     const roleToAdd2 = guild2.roles.find(r => r.name === roleToAdd1.name);
     let member2 = guild2.members.find(mem => mem.id === member.id);
     if (member2) {
         member2.addRole(roleToAdd2).catch(err => console.log(err));
+        logChannel.send('Applied ' + roleToAdd1.name + ' to ' + member.user.username + ' in ' + guild2.name);
+    } else {
+        logChannel.send('Unable to add role ' + roleToAdd1.name + ' to ' + member.user.username + ' in ' + guild2.name);
     }
 }
 
 removeRole = (member, roleId) => {
     const guild1 = client.guilds.find(guild => guild.id === config.server1id);
-    const roleToAdd1 = guild1.roles.find(r => r.id === roleId);
+    const logChannel = guild1.channels.find(channel => channel.id === config.logChannelId);
+    const roleToRemove1 = guild1.roles.find(r => r.id === roleId);
+    member.removeRole(roleToRemove1).catch(err => console.log(err));
     const guild2 = client.guilds.find(guild => guild.id === config.server2id);
-    const roleToAdd2 = guild2.roles.find(r => r.name === roleToAdd1.name);
+    const roleToRemove2 = guild2.roles.find(r => r.name === roleToRemove1.name);
     let member2 = guild2.members.find(mem => mem.id === member.id);
     if (member2) {
-        member2.removeRole(roleToAdd2).catch(err => console.log(err));
+        member2.removeRole(roleToRemove2).catch(err => console.log(err));
+        logChannel.send('Removed ' + roleToRemove1.name + ' from ' + member.user.username + ' in ' + guild2.name);
+    } else {
+        logChannel.send('Unable to remove role ' + roleToAdd1.name + ' to ' + member.user.username + ' in ' + guild2.name + ', member does not exist.');
+
     }
 }
 

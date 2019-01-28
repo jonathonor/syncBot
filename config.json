@@ -2,5 +2,6 @@
     "token": "BOT TOKEN HERE",
     "server1id": "INSERT SERVER 1 ID HERE",
     "server2id": "INSERT SERVER 2 ID HERE",
-    "commanderRole": "Role NAME of users who you want to let add/remove roles for example Admin"
+    "commanderRole": "Role NAME of users who you want to let add/remove roles for example Admin",
+    "logChannelId": "INSERT LOG CHANNLED ID HERE (must be in server 1)"
 }
