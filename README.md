@@ -32,3 +32,6 @@ Now you are ready to use the commands to add and remove roles in both servers.
 - !remove @username @role-name
     - will remove the role with the role name from the user in both servers
 
+In addition to manually adding roles with both commands above any role add/removal in server1
+will be applied in server 2 automatically if the user and role exists in server2.
+
