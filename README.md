@@ -36,6 +36,8 @@ Now you are ready to use the commands to add and remove roles in both servers.
 In addition to manually adding roles with both commands above any role add/removal in server1
 will be applied in server 2 automatically if the user and role exists in server2.
 
+In addition, if a user joins server2 that has roles in server1, those roles will be applied upon joining server2.
+
 Important Final Notes:<br>
 Make sure that the role being synced accross server1 -> server2 have the same exact name. Including capitals.<br>
 Make sure that the bot has read message / send message permissions on the log channel you create.<br>

@@ -44,18 +44,41 @@ client.on('guildMemberUpdate', update => {
             addRole(member, roleToAddId);
         }
     }
-  })
+});
+
+client.on('guildMemberAdd', addedMember => {
+    if (addedMember.guild.id === config.server2id) {
+        setTimeout(() => {
+            const guild1 = client.guilds.find(guild => guild.id === config.server1id);
+            const guild2 = client.guilds.find(guild => guild.id === config.server2id);
+            let memberIn1 = guild1.members.find(mem => mem.id === addedMember.user.id);
+            let memberIn2 = guild2.members.find(mem => mem.id === addedMember.user.id);
+            let member1Roles = [...memberIn1.roles];
+            
+            if (member1Roles.length > 0) {
+                member1Roles.forEach(role => {
+                    let apply = guild2.roles.find(r => r.name === role[1].name);
+                    if (apply && apply.id && apply.name) {
+                        memberIn2.addRole(apply).catch(err => console.log(err));
+                    } 
+                });
+                const logChannel = guild1.channels.find(channel => channel.id === config.logChannelId);
+                logChannel.send('Checking and syncing roles for new member in server2 ' + memberIn2.user.username);
+            } 
+        }, 3000);
+    }
+});
 
 addRole = (member, roleId) => {
     const guild1 = client.guilds.find(guild => guild.id === config.server1id);
     const logChannel = guild1.channels.find(channel => channel.id === config.logChannelId);
     const roleToAdd1 = guild1.roles.find(r => r.id === roleId);
-    member.addRole(roleToAdd1).catch(err => console.log(err));
+    member.addRole(roleToAdd1).catch(err => console.log('err ' + err));
     const guild2 = client.guilds.find(guild => guild.id === config.server2id);
     const roleToAdd2 = guild2.roles[roleId] !== null ? guild2.roles.find(r => r.name === roleToAdd1.name) : null;
     let member2 = guild2.members.find(mem => mem.id === member.id);
     if (member2 && roleToAdd2) {
-        member2.addRole(roleToAdd2).catch(err => console.log(err));
+        member2.addRole(roleToAdd2).catch(err => console.log('err ' + err));
         logChannel.send('Applied ' + roleToAdd1.name + ' to ' + member.user.username + ' in ' + guild2.name);
     } else if (!roleToAdd2) {
         logChannel.send('Unable to add role ' + roleToAdd1.name + ' to ' + member.user.username + ' in ' + guild2.name + ', role does not exist.');
