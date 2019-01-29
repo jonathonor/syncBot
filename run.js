@@ -63,7 +63,7 @@ client.on('guildMemberAdd', addedMember => {
                     } 
                 });
                 const logChannel = guild1.channels.find(channel => channel.id === config.logChannelId);
-                logChannel.send('Checking and syncing roles for new member in server2 ' + memberIn2.user.username);
+                logChannel.send('Checking and syncing roles for new member '+ memberIn2.user.username + ' in server2 ');
             } 
         }, 3000);
     }
