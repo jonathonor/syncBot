@@ -6,6 +6,7 @@ Clone this repo to wherever you want the bot to run.
     - cd /Documents
     - git clone https://github.com/jonathonor/syncBot.git
     - cd syncBot
+    - npm install discord.js
     - node run.js
 
 To Create a discord dev application if you don't have one (you need the token)
@@ -34,4 +35,9 @@ Now you are ready to use the commands to add and remove roles in both servers.
 
 In addition to manually adding roles with both commands above any role add/removal in server1
 will be applied in server 2 automatically if the user and role exists in server2.
+
+Important Final Notes:
+Make sure that the role being synced accross server1 -> server2 have the same exact name. Including capitals.
+Make sure that the bot has read message / send message permissions on the log channel you create.
+Make sure that the bots role is located higher in the heirarchy than all other discord roles you want it to assign.
 
