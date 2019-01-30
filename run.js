@@ -69,6 +69,29 @@ client.on('guildMemberAdd', addedMember => {
     }
 });
 
+client.on('guildMemberRemove', removedMember => {
+    if (removedMember.guild.id === config.server1id) {
+        setTimeout(() => {
+            const guild1 = client.guilds.find(guild => guild.id === config.server1id);
+            const guild2 = client.guilds.find(guild => guild.id === config.server2id);
+            let memberIn1 = removedMember;
+            let memberIn2 = guild2.members.find(mem => mem.id === removedMember.user.id);
+            let member1Roles = memberIn1._roles;
+            if (member1Roles.length > 0) {
+                member1Roles.forEach(roleId => {
+                    let server1Role = guild1.roles.find(ro => ro.id === roleId)
+                    let apply = guild2.roles.find(r => r.name === server1Role.name);
+                    if (apply) {
+                        memberIn2.removeRole(apply).catch(err => console.log(err));
+                    } 
+                });
+                const logChannel = guild1.channels.find(channel => channel.id === config.logChannelId);
+                logChannel.send('Removing roles from user that left: '+ memberIn2.user.username + ' in server2 ');
+            } 
+        }, 3000);
+    }
+});
+
 addRole = (member, roleId) => {
     const guild1 = client.guilds.find(guild => guild.id === config.server1id);
     const logChannel = guild1.channels.find(channel => channel.id === config.logChannelId);
