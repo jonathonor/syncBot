@@ -106,7 +106,15 @@ addRole = (member, roleId) => {
     } else if (!roleToAdd2) {
         logChannel.send('Unable to add role ' + roleToAdd1.name + ' to ' + member.user.username + ' in ' + guild2.name + ', role does not exist.');
     } else {
-        logChannel.send('Unable to add role ' + roleToAdd1.name + ' to ' + member.user.username + ' in ' + guild2.name + ', member does not exist.');
+        guild2.fetchMembers().then(guild2Updated => {
+            let member2Updated = guild2Updated.members.find(mem => mem.id === member.id);
+            if (member2Updated && roleToAdd2) {
+                member2Updated.addRole(roleToAdd2).catch(err => console.log('err ' + err));
+                logChannel.send('Applied ' + roleToAdd1.name + ' to ' + member.user.username + ' in ' + guild2.name);
+            } else {
+                logChannel.send('Unable to add role ' + roleToAdd1.name + ' to ' + member.user.username + ' in ' + guild2.name + ', member does not exist.');
+            }
+        });
     }
 }
 
@@ -124,7 +132,15 @@ removeRole = (member, roleId) => {
     } else if (!roleToRemove2) {
         logChannel.send('Unable to remove role ' + roleToRemove1.name + ' to ' + member.user.username + ' in ' + guild2.name + ', role does not exist.');
     } else {
-        logChannel.send('Unable to remove role ' + roleToRemove1.name + ' to ' + member.user.username + ' in ' + guild2.name + ', member does not exist.');
+        guild2.fetchMembers().then(guild2Updated => {
+            let member2Updated = guild2Updated.members.find(mem => mem.id === member.id);
+            if (member2Updated && roleToAdd2) {
+                member2Updated.addRole(roleToAdd2).catch(err => console.log('err ' + err));
+                logChannel.send('Applied ' + roleToAdd1.name + ' to ' + member.user.username + ' in ' + guild2.name);
+            } else {
+                logChannel.send('Unable to add role ' + roleToAdd1.name + ' to ' + member.user.username + ' in ' + guild2.name + ', member does not exist.');
+            }
+        });
     }
 }
 
