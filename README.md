@@ -18,6 +18,9 @@ Automatic Operations
 2. You have a user in your main server, and you remove them from the server, or they leave the main server. All roles that the user has in the main server are removed from the user in all additional synced servers. i.e. Jim is part of the mainserver and has role1, and role2, when Jim is kicked, or leaves the mainserver, but stays in any additional servers, he will no longer have role1 or role2 in any additional server. He also will not have role1 or role2 upon rejoining the mainserver until they are given back to him.
 
 Clone this repo to wherever you want the bot to run.
+- requirements :
+    - node v16.11.1 
+    - discord.js v13.2.0
 - example :
     - cd /Documents
     - git clone https://github.com/jonathonor/syncBot.git
