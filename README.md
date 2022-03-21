@@ -34,9 +34,9 @@ To Create a discord dev application if you don't have one (you need the token)
 2. Click New Application
 3. On the left hand side click Bot
 4. Click Ok
-5. Copy Bot Token into config.json, and copy Bot Client Id into config.json
+5. Copy Bot Token into config.json, and copy Oath2 -> Bot Client Id into config.json
 6. Enable Server Members Intent (so that we can sync roles as new members join and leave the servers)
-7. Click OAuth2 in the left sidebar
+7. Click OAuth2 in the left sidebar, Url Generator
 8. Click in the scopes section "bot" and in the bot permissions section "manage roles" & "view audit log"
 9. Copy the URL in the bottom of the "scopes" section and paste it into your web browser
 10. You will need to use the url to invite the bot to both servers you want synced
