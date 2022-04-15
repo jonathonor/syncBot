@@ -26,23 +26,30 @@ client.on('interactionCreate', async interaction => {
     if (!interaction.isCommand()) return;
 
     if (interaction.commandName === 'add') {
-        if (verifyUser(interaction.member.id)) {
-            let member = interaction.options.data.find(obj => obj.type === 'USER').member;
-            let role = interaction.options.data.find(obj => obj.type === 'ROLE').value;
-            triggeredByIntention = true;
-            addRole(member, role, interaction);
-        }
+        verifyUser(interaction.member.id).then(async verified => {
+            if (verified) {
+                let member = interaction.options.data.find(obj => obj.type === 'USER').member;
+                let role = interaction.options.data.find(obj => obj.type === 'ROLE').value;
+                triggeredByIntention = true;
+                addRole(member, role, interaction);
+            } else {
+                respondToInteraction(interaction, `You dont have the necessary role to send that command ${interaction.user.username}`);
+            }
+        }); 
     }
-
+    
     if (interaction.commandName === 'remove') {
-        if (verifyUser(interaction.member.id)) {
-            let member = interaction.options.data.find(obj => obj.type === 'USER').member;
-            let role = interaction.options.data.find(obj => obj.type === 'ROLE').value;
-            triggeredByIntention = true;
-            removeRole(member, role, interaction);
-        }
+        verifyUser(interaction.member.id).then(async verified => {
+            if (verified) {
+                let member = interaction.options.data.find(obj => obj.type === 'USER').member;
+                let role = interaction.options.data.find(obj => obj.type === 'ROLE').value;
+                triggeredByIntention = true;
+                removeRole(member, role, interaction);
+            } else {
+                respondToInteraction(interaction, `You dont have the necessary role to send that command ${interaction.user.username}`);
+            }
+        });
     }
-
 });
 
 // Manual function registered to (/) slash command to add a role from a user across all synced servers
@@ -105,11 +112,17 @@ removeRole = async (member, roleId, interaction = null) => {
     }
 }
 
+throttleUpdate = () => {
+    setTimeout(() => {
+        triggeredByIntention = false;
+    }, 2000);
+}
+
 // Verifies that the user who sent the command has the designated commanderRole from the config file.
 verifyUser = (id) => {
     return client.guilds.fetch(config.mainServer).then(guild => {
         return guild.members.fetch(id).then(member => {
-            return member._roles.find(role => role.name === config.commanderRole);
+            return member._roles.includes(config.allowedRoleId) || (guild.ownerId === member.id);
         });
     });
 }
@@ -138,7 +151,7 @@ respondToInteraction = async (interaction, message, error = null) => {
         console.log(error);
     }
 
-    triggeredByIntention = false;
+    throttleUpdate();
 }
 
 // When a users roles are updated in the main server, update them in all synced servers.

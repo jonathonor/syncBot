@@ -2,7 +2,7 @@
     "token": "BOT TOKEN HERE",
     "clientId": "BOT CLIENT ID HERE",
     "mainServer": "INSERT MAIN SERVER ID HERE",
-    "syncedServers": ["INSERT SYNCED SERVER ID HERE", "INSERT ADDITIONAL SYNCED SERVER ID HERE"],
-    "commanderRole": "Role NAME of users who you want to let add/remove roles for example Admin",
+    "syncedServers": ["INSERT SYNCED SERVER ID HERE", "INSERT ADDITIONAL SYNCED SERVER ID HERE (delete if only syncing one server)"],
+    "allowedRoleId": "Role ID of users who you want to let add/remove role",
     "logChannelId": "INSERT LOG CHANNEL ID HERE (must be in server 1)"
 }
