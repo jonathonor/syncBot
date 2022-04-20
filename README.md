@@ -1,8 +1,14 @@
 # syncBot
-
-Note - I have recently updated this bot on October 12, 2021 after years of neglect. If you experience any issues, please report an issue here on github and I will have a look!
-
 A bot that syncs roles between one main server, and multiple other discord servers.
+
+Walkthrough videos
+ - I host the bot and you simply invite it to your server and run a few commands
+        - https://youtu.be/lB6F_uMiEWk
+ - You host the bot and I walk you through the setup instructions
+        - https://youtu.be/OMe9bAKuApQ
+
+Reach me on my discord server 
+    - https://discord.gg/f8SUVvQZD3
 
 This bot will sync roles with names across multiple additional discord servers you have configured. See the below cases to further understand functionality.
 
