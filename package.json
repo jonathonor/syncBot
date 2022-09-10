@@ -1,0 +1,38 @@
+{
+  "name": "syncbot",
+  "version": "1.0.0",
+  "description": "A bot that syncs roles between one main server, and multiple other discord servers.",
+  "main": "run.js",
+  "scripts": {
+    "test": "node run2.js",
+    "start": "node run2.js"
+  },
+  "engines": {
+    "node": "16.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jonathonor/syncbot.git"
+  },
+  "keywords": [
+    "discord",
+    "sync",
+    "bot",
+    "server",
+    "week"
+  ],
+  "author": "jonathonor",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jonathonor/syncbot/issues"
+  },
+  "type": "module",
+  "homepage": "https://github.com/jonathonor/syncbot#readme",
+  "dependencies": {
+    "@discordjs/rest": "^1.0.0",
+    "axios": "^0.27.2",
+    "discord-api-types": "^0.36.2",
+    "discord.js": "^14.0.3",
+    "lowdb": "^3.0.0"
+  }
+}

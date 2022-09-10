@@ -10,26 +10,31 @@
 // 4. User role is removed via slash command in the main server, any role with the same name is removed from the user in each synced server
 // 5. User is added to a synced server, roles that match names of roles the user has in the main server are applied to the user in the synced servers
 // 6. User is removed from the main server, role names that the user has in the main server are removed in synced servers
-
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
 var config = require('./config.json')
-const { Client, Intents } = require('discord.js');
+import {
+    Client, GatewayIntentBits
+} from "discord.js";
 const axios = require('axios')
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers] });
 // This is to keep the action from firing twice when using the (/) command, since the guildMemberUpdate will see the role update and fire the add/remove again.
 let triggeredByIntention = false;
 
 client.on('ready', () => {
+    //TODO: Add validation of the config file
   console.log(`syncbot ready!`);
 });
 
 client.on('interactionCreate', async interaction => {
-    if (!interaction.isCommand()) return;
+    // 2 === APPLICATION_COMMAND
+    if (interaction.type !== 2) return;
 
     if (interaction.commandName === 'add') {
         verifyUser(interaction.member.id).then(async verified => {
             if (verified) {
-                let member = interaction.options.data.find(obj => obj.type === 'USER').member;
-                let role = interaction.options.data.find(obj => obj.type === 'ROLE').value;
+                let member = interaction.options.data.find(obj => obj.name === 'user').member;
+                let role = interaction.options.data.find(obj => obj.name === 'role').value;
                 triggeredByIntention = true;
                 addRole(member, role, interaction);
             } else {
@@ -41,8 +46,8 @@ client.on('interactionCreate', async interaction => {
     if (interaction.commandName === 'remove') {
         verifyUser(interaction.member.id).then(async verified => {
             if (verified) {
-                let member = interaction.options.data.find(obj => obj.type === 'USER').member;
-                let role = interaction.options.data.find(obj => obj.type === 'ROLE').value;
+                let member = interaction.options.data.find(obj => obj.name === 'user').member;
+                let role = interaction.options.data.find(obj => obj.name === 'role').value;
                 triggeredByIntention = true;
                 removeRole(member, role, interaction);
             } else {
@@ -53,7 +58,7 @@ client.on('interactionCreate', async interaction => {
 });
 
 // Manual function registered to (/) slash command to add a role from a user across all synced servers
-addRole = async (member, roleId, interaction = null) => {
+let addRole = async (member, roleId, interaction = null) => {
     const mainServer = await client.guilds.fetch(config.mainServer);
     const mainServerRoleToAdd = await mainServer.roles.fetch(roleId);
     member.roles.add(mainServerRoleToAdd).catch(err => respondToInteraction(interaction, 'There was an error adding the role in the main server, see console for error', err));
@@ -83,7 +88,7 @@ addRole = async (member, roleId, interaction = null) => {
 }
 
 // Manual function registered to (/) slash command to remove a role from a user across all synced servers
-removeRole = async (member, roleId, interaction = null) => {
+let removeRole = async (member, roleId, interaction = null) => {
     const mainServer = await client.guilds.fetch(config.mainServer);
     const mainServerRoleToRemove = await mainServer.roles.fetch(roleId);
     member.roles.remove(mainServerRoleToRemove).catch(err => respondToInteraction(interaction, 'There was an error removing the role in the main server, see console for error', err));
@@ -93,9 +98,18 @@ removeRole = async (member, roleId, interaction = null) => {
         const serverToSyncRoles = await serverToSync.roles.fetch();
         const syncedServerRoleToRemove = serverToSyncRoles.find(r => r.name === mainServerRoleToRemove.name);
         let memberToSync = serverToSync.members.cache.find(m => m.id === member.id);
+
         if (memberToSync && syncedServerRoleToRemove) {
-            memberToSync.roles.remove(syncedServerRoleToRemove).catch(err => respondToInteraction(interaction, `There was an error removing the role in a synced server named: ${serverToSync.name}, see console for error`, err));
-            respondToInteraction(interaction, `Removed ${mainServerRoleToRemove.name} from ${member.user.username} in ${serverToSync.name}`);
+            let memberHasRole = memberToSync.roles.cache.find(a => a.name === syncedServerRoleToRemove.name);
+
+            if (memberHasRole) {
+                memberToSync.roles.remove(syncedServerRoleToRemove).then(() => {
+                    respondToInteraction(interaction, `Removed ${mainServerRoleToRemove.name} from ${member.user.username} in ${serverToSync.name}`);
+                }).catch(err => respondToInteraction(interaction, `There was an error removing the role in a synced server named: ${serverToSync.name}, see console for error`, err));
+            } else {
+                respondToInteraction(interaction, `${member.user.username} did not have role ${mainServerRoleToRemove.name} to remove.`);
+            }
+
         } else if (!syncedServerRoleToRemove) {
             respondToInteraction(interaction, `Unable to remove role ${mainServerRoleToRemove.name} from ${member.user.username} in ${serverToSync.name}, role does not exist.`);
         } else {
@@ -112,14 +126,14 @@ removeRole = async (member, roleId, interaction = null) => {
     }
 }
 
-throttleUpdate = () => {
+let throttleUpdate = () => {
     setTimeout(() => {
         triggeredByIntention = false;
     }, 2000);
 }
 
 // Verifies that the user who sent the command has the designated commanderRole from the config file.
-verifyUser = (id) => {
+let verifyUser = (id) => {
     return client.guilds.fetch(config.mainServer).then(guild => {
         return guild.members.fetch(id).then(member => {
             return member._roles.includes(config.allowedRoleId) || (guild.ownerId === member.id);
@@ -128,7 +142,7 @@ verifyUser = (id) => {
 }
 
 // Responds to each (/) slash command with outcome of the command, if this was triggered by a client event or an error, it logs the outcome to the log channel denoted in config
-respondToInteraction = async (interaction, message, error = null) => {
+let respondToInteraction = async (interaction, message, error = null) => {
     if (!interaction) {
         const mainServer = await client.guilds.fetch(config.mainServer);
         const logChannel = await mainServer.channels.fetch(config.logChannelId);
