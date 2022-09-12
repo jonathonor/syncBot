@@ -1,5 +1,7 @@
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9');
+import { REST } from "@discordjs/rest";
+import { Routes } from "discord-api-types/v9";
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
 var config = require('./config.json')
 
 const commands = [{
@@ -32,7 +34,29 @@ const commands = [{
           "type": 6,
           "required": true
       }]
-  }]; 
+  }, {
+    "name": "role-checker",
+    "type": 1,
+    "description": "A role checker to compare roles between the main server and synced servers.",
+    "options": [
+        {
+            "name": "option",
+            "description": "Analyze sends a DM with the differences, force-sync will apply the changes shown in the analysis",
+            "type": 3,
+            "required": true,
+            "choices": [
+                {
+                    "name": "analyze",
+                    "value": "analyze"
+                },
+                {
+                    "name": "force-sync",
+                    "value": "force"
+                }
+            ]
+        }
+    ]
+}]; 
 
 const rest = new REST({ version: '9' }).setToken(config.token);
 
