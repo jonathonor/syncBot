@@ -64,6 +64,10 @@ Now you are ready to use the commands to add and remove roles in both servers an
     - will add the role with role name to the user in synced servers.
 - /remove @username @role-name
     - will remove the role with the role name from the user in synced servers
+- /role-checker 
+    - analyze - will send a file to you in DM detailing role differences of your users accross your servers
+    - force-sync - will force sync all users roles in the synced servers to match the main server roles they have
+    
 
 Important Final Notes:<br>
 Make sure that the role being synced accross server1 -> server2 have the same exact name. Including capitals.<br>
