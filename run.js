@@ -189,6 +189,7 @@ let addRole = async (member, roleId, interaction = null) => {
     member.roles.add(mainServerRoleToAdd).catch(err => respondToInteraction(interaction, 'There was an error adding the role in the main server, see console for error', err));
     
     for (const server of config.syncedServers) {
+        // TODO: if bot is not in server, this will fail (user has syncedServer id that they didn't invite bot to)
         const serverToSync = await client.guilds.fetch(server);
         const serverToSyncRoles = await serverToSync.roles.fetch();
         const syncedServerRoleToAdd = serverToSyncRoles.find(r => r.name === mainServerRoleToAdd.name);
