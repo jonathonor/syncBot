@@ -49,7 +49,7 @@ Clone this repo to wherever you want the bot to run.
 To Create a discord dev application if you don't have one (you need the token)
 1. Create a Discord Bot at https://discord.com/developers/applications
 2. Click New Application
-3. Enable Server Members Intent (so that we can sync roles as new members join and leave the servers)
+3. Enable Server Members Intent and Presence Intent(so that we can sync roles as new members join and leave the servers)
 4. On the left hand side click Bot
 5. Click Ok
 6. Copy Bot Token into config.json
