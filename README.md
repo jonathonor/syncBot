@@ -18,6 +18,9 @@ Manual Operations
 2. You have a user in your main server, and you use the /add command with @role1 @username, the bot will look up the role named "role1" in each additional server and give the user that role in each of the additional servers as well.
 3. You have a user in your main server, and you use the discord UI to remove role1 from the user, the bot will see if the user exists in each of the additional servers, and will remove the role from them there as well.
 4. You have a user in your main server, and you use the /remove command with @role1 @username, the bot will see if the user exists in each of the additinoal servers, and will remove the role from them there as well.
+5. Your bot has gone down at some point and you don't know what roles each user has in your synced servers.
+ - You can run the role-checker command with the analyze option which sends you a file detailing the differences between your users roles in each server.
+ - You can run the role-checker command with the force-sync option which will return all users in all synced servers roles to match the main server roles they have.
 
 Automatic Operations
 1. You have a user in your main server, and you invite them to an additional server. When the user joins the additional server, any roles that they have in the main server will be applied automatically to them on join of the additional server. i.e. Jim is part of the mainserver and has role1, and then Jim joins a synced server. Jim automatically has role1 upon joining the secondary server.
@@ -61,6 +64,10 @@ Now you are ready to use the commands to add and remove roles in both servers an
     - will add the role with role name to the user in synced servers.
 - /remove @username @role-name
     - will remove the role with the role name from the user in synced servers
+- /role-checker 
+    - analyze - will send a file to you in DM detailing role differences of your users accross your servers
+    - force-sync - will force sync all users roles in the synced servers to match the main server roles they have
+    
 
 Important Final Notes:<br>
 Make sure that the role being synced accross server1 -> server2 have the same exact name. Including capitals.<br>
