@@ -18,7 +18,7 @@ import {
 } from "discord.js";
 import { iterateThroughMembers } from "./helpers.js";
 const axios = require('axios')
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences] });
 // This is to keep the action from firing twice when using the (/) command, since the guildMemberUpdate will see the role update and fire the add/remove again.
 let triggeredByIntention = false;
 
@@ -261,6 +261,7 @@ let respondToInteraction = async (interaction, message, error = null) => {
 
 // When a users roles are updated in a synced server, update them in the main server.
 client.on('guildMemberUpdate', async (oldMember, newMember) => {
+    console.log("1", !triggeredByIntention, config.syncedServers.includes(newMember.guild.id));
     if (!triggeredByIntention && (config.syncedServers.includes(newMember.guild.id))) {
         let oldRoles = oldMember._roles;
         let newRoles = newMember._roles;
