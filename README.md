@@ -78,6 +78,24 @@ Automatic Operations
  - You have a user a synced server, and you remove them from the synced server, or they leave the synced server. All roles that the user has in the synced server are removed from the user in the main server. 
    - example: Jim is part of a synced server and has role1, and role2 there, when Jim is kicked, or leaves that synced server, but stays in the main server, he will no longer have role1 or role2 in the main server. He also will not have role1 or role2 upon rejoining the mainserver until they are given back to him in a synced server.
 
+## Installing
+- requirements :
+    - node v16.11.1 
+    - discord.js v13.2.0
+- example install :
+    - cd /Documents
+    - git clone https://github.com/jonathonor/syncBot.git
+    - cd syncBot
+    - npm install discord.js @discordjs/rest discord-api-types axios 
+    - follow the config steps at [SyncBot Config Documentation](https://jonsbots.com/syncbot/#aioseo-explain-config-file) to populate the config.json file before executing the next two commands
+
+- To start regular sync bot
+  - node register.js (this registers the /add /remove and /role-checker slash commands for your main server)
+  - node run.js
+    
+- To start regular sync bot
+  - node registerGlobal.js (this registers the /add /remove and /role-checker slash commands for all your servers)
+  - node runReverse.js
 <!-- CONTRIBUTING -->
 ## Contributing
 
