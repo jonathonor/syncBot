@@ -37,6 +37,47 @@ This is a side project I started back in 2019 to help a friend in managing his m
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## Use Cases - Running Regular SyncBot 
+#### (a single main server feeding roles to multiple synced servers)
+Manual Operations
+ - Adding Roles
+   - You have a user in your main server, and you use the discord UI to give the user role1, the bot will look up any role named "role1" in each additional server and give the user that role in each of the additional servers as well.
+   - You have a user in your main server, and you use the /add command with @role1 @username, the bot will look up the role named "role1" in each additional server and give the user that role in each of the additional servers as well.
+ - Removing Roles
+   - You have a user in your main server, and you use the discord UI to remove role1 from the user, the bot will see if the user exists in each of the additional servers, and will remove the role from them there as well.
+   - You have a user in your main server, and you use the /remove command with @role1 @username, the bot will see if the user exists in each of the additinoal servers, and will remove the role from them there as well.
+ - Role Verification
+   - Your bot has gone down at some point and you don't know what roles each user has in your synced servers.
+     - You can run the role-checker command with the analyze option which sends you a file detailing the differences between your users roles in each server.
+     - You can run the role-checker command with the force-sync option which will return all users in all synced servers roles to match the main server roles they have.
+
+Automatic Operations
+ - You have a user in your main server, and you invite them to an additional server. When the user joins the additional server, any roles that they have in the main server will be applied automatically to them on join of the additional server. 
+   - example: Jim is part of the mainserver and has role1, and then Jim joins a synced server. Jim automatically has role1 upon joining the synced server.
+ - You have a user in your main server, and you remove them from the server, or they leave the main server. All roles that the user has in the main server are removed from the user in all additional synced servers. 
+   - example: Jim is part of the mainserver and has role1, and role2, when Jim is kicked, or leaves the mainserver, but stays in any additional servers, he will no longer have role1 or role2 in any additional server. He also will not have role1 or role2 upon rejoining the mainserver until they are given back to him.
+
+## Use Cases - Running Reverse SyncBot 
+#### (many synced servers feeding roles back to a single main server)
+Manual Operations
+- Adding Roles
+   - You have a user in a synced server, and you use the discord UI to give the user role1, the bot will look up any role named "role1" in the main server and give the user that role in the main server.
+   - You have a user in a synced server, and you use the /add command with @role1 @username, the bot will look up the role named "role1" in the main server and give the user that role in the main server.
+
+- Removing Roles
+   - You have a user in a synced server, and you use the discord UI to remove role1 from the user, the bot will see if the user exists in the main server, and will remove the role from them there as well.
+   - You have a user in a synced server, and you use the /remove command with @role1 @username, the bot will see if the user exists inin the main server, and will remove the role from them there as well.
+- Role Verification
+   - Your bot has gone down at some point and you don't know what roles each user has in your synced servers.
+     - You can run the role-checker command with the analyze option which sends you a file detailing the differences between your users roles in each server.
+     - You can run the role-checker command with the force-sync option which will return all users in all synced servers roles to match the main server roles they have.
+
+Automatic Operations
+ - You have a user in a synced server, and you invite them to the main server. When the user joins the main server, any roles that they have in a synced server will be applied automatically to them on join of the main server. 
+   - example: Jim is part of a synced server and has role1, and then Jim joins the main server. Jim automatically has role1 upon joining the main server.
+ - You have a user a synced server, and you remove them from the synced server, or they leave the synced server. All roles that the user has in the synced server are removed from the user in the main server. 
+   - example: Jim is part of a synced server and has role1, and role2 there, when Jim is kicked, or leaves that synced server, but stays in the main server, he will no longer have role1 or role2 in the main server. He also will not have role1 or role2 upon rejoining the mainserver until they are given back to him in a synced server.
+
 <!-- CONTRIBUTING -->
 ## Contributing
 
