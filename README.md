@@ -8,7 +8,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/jonathonor/syncbot">
-    <img src="5966-200.png" alt="Logo" width="80" height="80">
+    <img src="syncBotLogo.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">SyncBot</h3>
