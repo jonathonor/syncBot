@@ -25,7 +25,7 @@ A bot that sync roles between multiple synced servers, and one main server.</p>
     <a href="https://github.com/jonathonor/syncbot/issues">Report Bug</a>
     ·
     <a href="https://github.com/jonathonor/syncbot/issues">Request Feature</a>
-    .
+    ·
     <a href="https://jonsbots.com">My Website</a>
   </p>
 </div>
