@@ -1,11 +1,18 @@
 # syncBot
-A bot that syncs roles between one main server, and multiple other discord servers.
+run.js - A bot that syncs roles between one main server, and multiple other discord servers.
+runReverse.js - A bot that sync roles between multiple synced servers, and one main server.
 
-Walkthrough videos
+Walkthrough videos - Original syncBot
  - I host the bot and you simply invite it to your server and run a few commands
         - https://youtu.be/lB6F_uMiEWk
  - You host the bot and I walk you through the setup instructions
         - https://youtu.be/OMe9bAKuApQ
+
+Walkthrough videos - Reverse syncBot
+ - I host the bot and you simply invite it to your server and run a few commands
+        - coming soon
+ - You host the bot and I walk you through the setup instructions
+        - coming soon
 
 Reach me on my discord server 
     - https://discord.gg/f8SUVvQZD3
