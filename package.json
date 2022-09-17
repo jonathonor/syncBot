@@ -4,8 +4,9 @@
   "description": "A bot that syncs roles between one main server, and multiple other discord servers.",
   "main": "run.js",
   "scripts": {
-    "test": "node run2.js",
-    "start": "node run2.js"
+    "test": "node run.js",
+    "runReverse": "node runReverse.js",
+    "start": "node run.js"
   },
   "engines": {
     "node": "16.x"
