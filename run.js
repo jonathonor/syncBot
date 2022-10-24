@@ -322,23 +322,21 @@ client.on('guildMemberAdd', async addedMember => {
         let mainServerMember = await mainServer.members.fetch(addedMember.user.id);
         let mainServerMemberRoles = [...mainServerMember.roles.cache.values()].filter(r => r.name !== '@everyone');
 
-        for (const server of config.syncedServers) {
-            const guildToSync = await client.guilds.fetch(server);
-            let memberToSync = await guildToSync.members.fetch(addedMember.user.id);
-            
-            if (mainServerMemberRoles.length > 0) {
-                let guildToSyncRoles = await guildToSync.roles.fetch();
-                const logChannel = await mainServer.channels.fetch(config.logChannelId);
+        const guildToSync = await client.guilds.fetch(addedMember.guild.id);
+        let memberToSync = await guildToSync.members.fetch(addedMember.user.id);
+        
+        if (mainServerMemberRoles.length > 0) {
+            let guildToSyncRoles = await guildToSync.roles.fetch();
+            const logChannel = await mainServer.channels.fetch(config.logChannelId);
 
-                mainServerMemberRoles.forEach(role => {
-                    let roleToAdd = guildToSyncRoles.find(r => r.name === role.name);
-                    if (roleToAdd && roleToAdd.id && roleToAdd.name) {
-                        memberToSync.roles.add(roleToAdd).catch(err => console.log(err));
-                    } 
-                });
-                logChannel.send(`Syncing roles in server: ${guildToSync.name} for new member: ${memberToSync.user.username}`);
-            } 
-        }
+            mainServerMemberRoles.forEach(role => {
+                let roleToAdd = guildToSyncRoles.find(r => r.name === role.name);
+                if (roleToAdd && roleToAdd.id && roleToAdd.name) {
+                    memberToSync.roles.add(roleToAdd).catch(err => console.log(err));
+                } 
+            });
+            logChannel.send(`Syncing roles in server: ${guildToSync.name} for new member: ${memberToSync.user.username}`);
+        } 
     }
 });
 
