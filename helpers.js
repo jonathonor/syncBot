@@ -15,6 +15,15 @@ export let iterateThroughMembers = async (interaction, action, callback, options
               data = await action(member, interaction, data, options);
             } else {
               let error = `Unable to apply action: ${action.name} to ${member.user.username}`;
+
+              if (!member.manageable) {
+                error += ". Member is not manageable."
+              }
+
+              if (member.user.bot) {
+                error += ". Member is a bot."
+              }
+
               console.log(error);
               data.errors.push(error);
             }

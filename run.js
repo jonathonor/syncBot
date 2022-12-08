@@ -62,6 +62,7 @@ client.on('interactionCreate', async interaction => {
             if (verified) {
                 let option = interaction.options.data.find(obj => obj.name === 'option').value;
                 triggeredByIntention = true;
+                await interaction.deferReply();
                 if (option === 'analyze')
                 {
                     await iterateThroughMembers(interaction, roleAnalyze, roleAnalyzeCallback);
@@ -76,7 +77,6 @@ client.on('interactionCreate', async interaction => {
 });
 
 let roleAnalyze = async (member, interaction, data, forceSync = false) => {
-    await interaction.deferReply();
     let memberMainserverRolesCollection = member.roles.cache;
     let memberMainServerRolesArrayStrings = memberMainserverRolesCollection.map(role => role.name);
     let memberObj = {username: member.displayName, serversWithDifferingRoles: []};
