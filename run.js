@@ -76,6 +76,7 @@ client.on('interactionCreate', async interaction => {
 });
 
 let roleAnalyze = async (member, interaction, data, forceSync = false) => {
+    await interaction.deferReply();
     let memberMainserverRolesCollection = member.roles.cache;
     let memberMainServerRolesArrayStrings = memberMainserverRolesCollection.map(role => role.name);
     let memberObj = {username: member.displayName, serversWithDifferingRoles: []};
@@ -173,7 +174,7 @@ let roleAnalyzeCallback = (interaction, data, forceSync) => {
         .then(async () => {
             let analyzed = `I went through and compared roles for ${data.membersAnalyzed} members. I sent you the results in a DM.`;
             let forced = `I went through and synced roles for ${data.membersAnalyzed} members. I sent you a report in a DM.`;
-            return await interaction.reply({
+            return await interaction.editReply({
                 content: forceSync ? forced : analyzed,
                 ephemeral: true,
             });
