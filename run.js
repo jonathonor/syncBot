@@ -34,9 +34,9 @@ let verifyConfig = () => {
     // \x1b[93m Yellow
     
     //errors
-    if (!config.applicationId || (config.applicationId && config.applicationId.length !== 18)) {
+    if (!config.applicationId) {
         hasError = true;
-        console.log('\x1b[91m Config applicationId missing or not 18 characters, please check. \x1b[0m')
+        console.log('\x1b[91m Config applicationId missing, please check. \x1b[0m')
     }
 
     if (!config.token) {
@@ -44,21 +44,14 @@ let verifyConfig = () => {
         console.log('\x1b[91m Config token missing, please add it. \x1b[0m')
     }
 
-    if (!config.mainServer || (config.mainServer && config.mainServer.length !== 18)) {
+    if (!config.mainServer) {
         hasError = true;
-        console.log('\x1b[91m Config mainserver missing or not 18 characters, please check. \x1b[0m')
+        console.log('\x1b[91m Config mainserver missing, please check. \x1b[0m')
     }
 
     if (!config.syncedServers || (config.syncedServers && !Array.isArray(config.syncedServers))) {
         hasError = true;
         console.log('\x1b[91m Config syncedServers missing or not Array, please verify it exists and matches structure "syncedServers": ["123456789123456789"], \x1b[0m')
-    } else {
-        for (let server of config.syncedServers) {
-            if (server.length !== 18) {
-                hasError = true;
-                console.log(`\x1b[91m Synced server id: ${server} length is not equal to 18 characters, please check the id. \x1b[0m`)
-            }
-        }
     }
 
     // warnings
