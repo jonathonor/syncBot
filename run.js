@@ -86,7 +86,9 @@ client.on('interactionCreate', async interaction => {
 });
 
 let roleAnalyze = async (member, interaction, data, forceSync = false) => {
-    let memberMainserverRolesCollection = member.roles.cache;
+    let memberPremiumRole = member.roles.premiumSubscriberRole;
+    debugLog(`Main server member premium role: ${memberPremiumRole}`);
+    let memberMainserverRolesCollection = memberPremiumRole ? member.roles.cache.filter(r => r.name !== memberPremiumRole.name) : member.roles.cache;
     let memberMainServerRolesArrayStrings = memberMainserverRolesCollection.map(role => role.name);
     let memberObj = {username: member.displayName, serversWithDifferingRoles: []};
     let hasDifferingRoles = false;
@@ -101,7 +103,9 @@ let roleAnalyze = async (member, interaction, data, forceSync = false) => {
             let membersInFetchedServer = await fetchedServer.members.fetch();
             if (membersInFetchedServer.has(member.id)) {
                 let memberInFetchedServer = membersInFetchedServer.get(member.id);
-                let membersRolesInFetchedServer = memberInFetchedServer.roles.cache;
+                let memberPremiumRoleInFetchedServer = memberInFetchedServer.roles.premiumSubscriberRole;
+                debugLog(`Synced server member premium role: ${memberPremiumRoleInFetchedServer}`);
+                let membersRolesInFetchedServer = memberPremiumRoleInFetchedServer ? memberInFetchedServer.roles.cache.filter(r => r.name !== memberPremiumRoleInFetchedServer.name) : memberInFetchedServer.roles.cache;
                 let membersRolesInFetchedServerAsStrings = membersRolesInFetchedServer.map(role => role.name);
                 debugLog(`Syncing roles for user found in synced server: ${member.displayName}, roles found: ${membersRolesInFetchedServerAsStrings}`)
                 // Roles that need removed from the user in the fetched server to match the roles the user has in the main server
