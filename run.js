@@ -59,7 +59,8 @@ client.on('interactionCreate', async interaction => {
 
     if (interaction.commandName === 'role-checker') {
         verifyUser(interaction.member.id).then(async verified => {
-            if (verified) {
+            
+            if (verified && (interaction.guildId === config.mainServer)) {
                 let option = interaction.options.data.find(obj => obj.name === 'option').value;
                 triggeredByIntention = true;
                 await interaction.deferReply();
@@ -70,7 +71,11 @@ client.on('interactionCreate', async interaction => {
                     await iterateThroughMembers(interaction, roleAnalyze, roleAnalyzeCallback, true);
                 }
             } else {
-                respondToInteraction(interaction, `You dont have the necessary role to send that command ${interaction.user.username}`);
+                if (!verified) {
+                    respondToInteraction(interaction, `You dont have the necessary role to send that command ${interaction.user.username}`);
+                } else {
+                    respondToInteraction(interaction, `You need to run this command in your main server.`);
+                }
             }
         });
     }
@@ -87,8 +92,8 @@ let roleAnalyze = async (member, interaction, data, forceSync = false) => {
         const fetchedServerRoles = await fetchedServer.roles.fetch();
         if (fetchedServer.ownerId === interaction.member.id) {
             let membersInFetchedServer = await fetchedServer.members.fetch();
-            let memberInFetchedServer = membersInFetchedServer.get(member.id);
-            if (memberInFetchedServer) {
+            if (membersInFetchedServer.has(member.id)) {
+                let memberInFetchedServer = membersInFetchedServer.get(member.id);
                 let membersRolesInFetchedServer = memberInFetchedServer.roles.cache;
                 let membersRolesInFetchedServerAsStrings = membersRolesInFetchedServer.map(role => role.name);
                 // Roles that need removed from the user in the fetched server to match the roles the user has in the main server
@@ -107,7 +112,7 @@ let roleAnalyze = async (member, interaction, data, forceSync = false) => {
                     let add = forceSync ? 'rolesAddedToMatchMainserver' : 'rolesToAddToMatchMainServer';
                     if (rolesToRemoveInThisServer.length > 0 && rolesToAddInThisServer.length === 0) {
                         if (forceSync) {
-                            memberInFetchedServer.roles.remove(rolesCollectionToRemoveInThisServer);
+                            await memberInFetchedServer.roles.remove(rolesCollectionToRemoveInThisServer);
                         }
 
                         memberObj.serversWithDifferingRoles
@@ -117,7 +122,7 @@ let roleAnalyze = async (member, interaction, data, forceSync = false) => {
                     } 
                     if (rolesToAddInThisServer.length > 0 && rolesToRemoveInThisServer.length === 0) {
                         if (forceSync) {
-                            memberInFetchedServer.roles.add(rolesCollectionToAddInThisServer);
+                            await memberInFetchedServer.roles.add(rolesCollectionToAddInThisServer);
                         }
 
                         memberObj.serversWithDifferingRoles
