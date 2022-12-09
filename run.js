@@ -435,24 +435,27 @@ client.on('guildMemberUpdate', async update => {
 client.on('guildMemberAdd', async addedMember => {
     if (config.syncedServers.includes(addedMember.guild.id)) {
         const mainServer = await client.guilds.fetch(config.mainServer);
-        let mainServerMember = await mainServer.members.fetch(addedMember.user.id);
-        let mainServerMemberRoles = [...mainServerMember.roles.cache.values()].filter(r => r.name !== '@everyone');
+        mainServer.members.fetch(addedMember.user.id).then(async mainServerMember => {
+            let mainServerMemberRoles = [...mainServerMember.roles.cache.values()].filter(r => r.name !== '@everyone');
 
-        const guildToSync = await client.guilds.fetch(addedMember.guild.id);
-        let memberToSync = await guildToSync.members.fetch(addedMember.user.id);
-        
-        if (mainServerMemberRoles.length > 0) {
-            let guildToSyncRoles = await guildToSync.roles.fetch();
-            const logChannel = await mainServer.channels.fetch(config.logChannelId);
-
-            mainServerMemberRoles.forEach(role => {
-                let roleToAdd = guildToSyncRoles.find(r => r.name === role.name);
-                if (roleToAdd && roleToAdd.id && roleToAdd.name) {
-                    memberToSync.roles.add(roleToAdd).catch(err => console.log(err));
-                } 
-            });
-            logChannel.send(`Syncing roles in server: ${guildToSync.name} for new member: ${memberToSync.user.username}`);
-        } 
+            const guildToSync = await client.guilds.fetch(addedMember.guild.id);
+            let memberToSync = await guildToSync.members.fetch(addedMember.user.id);
+            
+            if (mainServerMemberRoles.length > 0) {
+                let guildToSyncRoles = await guildToSync.roles.fetch();
+                const logChannel = await mainServer.channels.fetch(config.logChannelId);
+    
+                mainServerMemberRoles.forEach(role => {
+                    let roleToAdd = guildToSyncRoles.find(r => r.name === role.name);
+                    if (roleToAdd && roleToAdd.id && roleToAdd.name) {
+                        memberToSync.roles.add(roleToAdd).catch(err => console.log(err));
+                    } 
+                });
+                logChannel.send(`Syncing roles in server: ${guildToSync.name} for new member: ${memberToSync.user.username}`);
+            } 
+        }).catch(e => {
+            debugLog(`Not adding any roles for ${addedMember.displayName} because they aren't in the main server`);
+        });
     }
 });
 
