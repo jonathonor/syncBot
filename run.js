@@ -286,7 +286,8 @@ let throttleUpdate = () => {
 let verifyUser = (id, guildId = config.mainServer) => {
     return client.guilds.fetch(guildId).then(guild => {
         return guild.members.fetch(id).then(member => {
-            return member._roles.includes(config.allowedRoleId) || (guild.ownerId === member.id);
+            let matchesRoleName = member.roles.cache.find(r => r.name === config.allowedRoleName);
+            return member._roles.includes(config.allowedRoleId) || (guild.ownerId === member.id) || matchesRoleName;
         });
     });
 }
