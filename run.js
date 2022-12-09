@@ -86,6 +86,8 @@ client.on('interactionCreate', async interaction => {
 });
 
 let roleAnalyze = async (member, interaction, data, forceSync = false) => {
+    const mainServerRoles = await member.guild.roles.fetch();
+    const mainServerRolesStrings = mainServerRoles.map(r => r.name);
     let memberPremiumRole = member.roles.premiumSubscriberRole;
     debugLog(`Main server member premium role: ${memberPremiumRole}`);
     let memberMainserverRolesCollection = memberPremiumRole ? member.roles.cache.filter(r => r.name !== memberPremiumRole.name) : member.roles.cache;
@@ -109,7 +111,7 @@ let roleAnalyze = async (member, interaction, data, forceSync = false) => {
                 let membersRolesInFetchedServerAsStrings = membersRolesInFetchedServer.map(role => role.name);
                 debugLog(`Syncing roles for user found in synced server: ${member.displayName}, roles found: ${membersRolesInFetchedServerAsStrings}`)
                 // Roles that need removed from the user in the fetched server to match the roles the user has in the main server
-                let rolesCollectionToRemoveInThisServer = membersRolesInFetchedServer.filter(r => !memberMainServerRolesArrayStrings.includes(r.name));
+                let rolesCollectionToRemoveInThisServer = membersRolesInFetchedServer.filter(r => !memberMainServerRolesArrayStrings.includes(r.name) && mainServerRolesStrings.includes(r.name));
                 // Roles that need added to the user in the fetched server to match the roles the user has in the main server
                 let rolesCollectionToAddInThisServer = memberMainserverRolesCollection
                                                             .filter(r => !membersRolesInFetchedServerAsStrings.includes(r.name))
