@@ -85,9 +85,16 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
+// Analyze roles, checking for differences in roles assigned between users in the main server and each synced server.
 let roleAnalyze = async (member, interaction, data, forceSync = false) => {
+    const mainServerMe = await member.guild.members.fetchMe();
+    const mainServerMeRole = mainServerMe.roles.botRole;
     const mainServerRoles = await member.guild.roles.fetch();
+    // Find roles that are higher than the bots role in the main server so that we don't try and assign them (they will fail with Missing Permisssion)
+    const mainServerHigherRoles = mainServerRoles.filter(r => r.comparePositionTo(mainServerMeRole) > 0).map(r => r.name);
+    debugLog(`Main server roles that are higher than the bots which will be omitted from sync: ${mainServerHigherRoles}`);
     const mainServerRolesStrings = mainServerRoles.map(r => r.name);
+    // Nitro boosted role (unable to be assigned, will get Missing Permissions)
     let memberPremiumRole = member.roles.premiumSubscriberRole;
     debugLog(`Main server member premium role: ${memberPremiumRole}`);
     let memberMainserverRolesCollection = memberPremiumRole ? member.roles.cache.filter(r => r.name !== memberPremiumRole.name) : member.roles.cache;
@@ -97,7 +104,12 @@ let roleAnalyze = async (member, interaction, data, forceSync = false) => {
     debugLog(`Processing ${member.displayName}: has ${memberMainServerRolesArrayStrings} in mainserver`)
     for (const server of config.syncedServers) {
         const fetchedServer = await client.guilds.fetch(server);
+        const syncedMe = await fetchedServer.members.fetchMe();
+        const syncedMeRole = syncedMe.roles.botRole;
         const fetchedServerRoles = await fetchedServer.roles.fetch();
+        const fetchedServerRolesStrings = fetchedServerRoles.map(r => r.name);
+        const fetchedServerHigherRoles = fetchedServerRoles.filter(r => r.comparePositionTo(syncedMeRole) > 0).map(r => r.name);
+        debugLog(`Synced server roles that are higher than the bots which will be omitted from sync: ${fetchedServerHigherRoles}`);
         debugLog(`Syncing roles in ${fetchedServer.name}`)
         let verified = await verifyUser(interaction.member.id, fetchedServer.id);
         debugLog(`User running command: ${interaction.member.displayName} verification is: ${verified} in ${fetchedServer.name}`)
@@ -110,11 +122,20 @@ let roleAnalyze = async (member, interaction, data, forceSync = false) => {
                 let membersRolesInFetchedServer = memberPremiumRoleInFetchedServer ? memberInFetchedServer.roles.cache.filter(r => r.name !== memberPremiumRoleInFetchedServer.name) : memberInFetchedServer.roles.cache;
                 let membersRolesInFetchedServerAsStrings = membersRolesInFetchedServer.map(role => role.name);
                 debugLog(`Syncing roles for user found in synced server: ${member.displayName}, roles found: ${membersRolesInFetchedServerAsStrings}`)
-                // Roles that need removed from the user in the fetched server to match the roles the user has in the main server
-                let rolesCollectionToRemoveInThisServer = membersRolesInFetchedServer.filter(r => !memberMainServerRolesArrayStrings.includes(r.name) && mainServerRolesStrings.includes(r.name));
-                // Roles that need added to the user in the fetched server to match the roles the user has in the main server
+                // Roles that need removed from the user in the synced server to match the roles the user has in the main server
+                // Gets roles the member has in synced server, and filters out roles whose names match these roles in the main server, this gives us the roles we need to remove to this user in the synced server
+                // Filter out roles that are higher than the bot in the heirarchy in the main server
+                // Filter out roles that do not exist in the main server (actual roles in the server, not on the member)
+                let rolesCollectionToRemoveInThisServer = membersRolesInFetchedServer
+                                                            .filter(r => !memberMainServerRolesArrayStrings.includes(r.name) && mainServerRolesStrings.includes(r.name))
+                                                            .filter(r => !mainServerHigherRoles.includes(r.name));
+                // Roles that need added to the user in the synced server to match the roles the user has in the main server
+                // Gets roles the member has in main server, and filters out roles whose names match these roles in the synced server, this gives us the roles we need to add to this user in the synced server
+                // Filter out roles that are higher than the bot in the heirarchy in the synced server
+                // Filter out roles that do not exist in the synced server (no use in trying to sync a role we know doesn't exist in synced)
                 let rolesCollectionToAddInThisServer = memberMainserverRolesCollection
-                                                            .filter(r => !membersRolesInFetchedServerAsStrings.includes(r.name))
+                                                            .filter(r => !membersRolesInFetchedServerAsStrings.includes(r.name) && fetchedServerRolesStrings.includes(r.name))
+                                                            .filter(r => !fetchedServerHigherRoles.includes(r.name))
                                                             // must map the role over to the one in synced server for add
                                                             .map(role => fetchedServerRoles.find(r => r.name === role.name) || role);
 
