@@ -288,11 +288,11 @@ let verifyUser = (id, guildId = config.mainServer) => {
         return guild.members.fetch(id).then(member => {
             let matchesRoleName = member.roles.cache.find(r => r.name === config.allowedRoleName);
             debugLog(`VERIFICATION OF ${member.displayName} IN ${guild.name}`)
-            debugLog(`Role name matches config: ${matchesRoleName}`);
+            debugLog(`Role name matches config: ${!!matchesRoleName}`);
             debugLog(`Role id matches config: ${member._roles.includes(config.allowedRoleId)}`);
             debugLog(`Is guild owner: ${guild.ownerId === member.id}`);
 
-            return member._roles.includes(config.allowedRoleId) || (guild.ownerId === member.id) || matchesRoleName;
+            return member._roles.includes(config.allowedRoleId) || (guild.ownerId === member.id) || !!matchesRoleName;
         });
     });
 }
