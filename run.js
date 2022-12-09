@@ -467,18 +467,22 @@ client.on('guildMemberRemove', async removedMember => {
 
         for (const server of config.syncedServers) {
             const guildToSync = await client.guilds.fetch(server);
-            let memberToSync = await guildToSync.members.fetch(removedMember.user.id);
-            if (mainServerMemberRoles.length > 0) {
-                let syncedServerRoles = await guildToSync.roles.fetch();
-                mainServerMemberRoles.forEach(roleId => {
-                    let mainServerRole = mainServerRoles.find(r => r.id === roleId);
-                    let roleToRemove = syncedServerRoles.find(r => r.name === mainServerRole.name);
-                    if (roleToRemove) {
-                        memberToSync.roles.remove(roleToRemove).catch(err => console.log(err));
-                    } 
-                });
-                logChannel.send(`Removing roles from: ${memberToSync.user.username} in server: ${guildToSync.name} since they left the main server`);
-            } 
+            guildToSync.members.fetch(removedMember.user.id).then(async memberToSync => {
+                debugLog(`Removing ${mainServerMemberRoles.map(r => r.name)} from ${removedMember.displayName} in ${guildToSync.name}`);
+                if (mainServerMemberRoles.length > 0) {
+                    let syncedServerRoles = await guildToSync.roles.fetch();
+                    mainServerMemberRoles.forEach(roleId => {
+                        let mainServerRole = mainServerRoles.find(r => r.id === roleId);
+                        let roleToRemove = syncedServerRoles.find(r => r.name === mainServerRole.name);
+                        if (roleToRemove) {
+                            memberToSync.roles.remove(roleToRemove).catch(err => console.log(err));
+                        } 
+                    });
+                    logChannel.send(`Removing roles from: ${memberToSync.user.username} in server: ${guildToSync.name} since they left the main server`);
+                }
+            }).catch(e => {
+                debugLog(`Not removing roles from ${removedMember.displayName} in ${guildToSync.name} because they aren't in that server.`);
+            });
         }   
     }
 });
