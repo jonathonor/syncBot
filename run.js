@@ -23,10 +23,76 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBit
 let triggeredByIntention = false;
 const isDebug = process.argv[2] === 'debug';
 
+let verifyConfig = () => {
+    let hasError = false;
+    console.log("\x1b[94m VERIFYING CONFIG FILE \x1b[0m")
+    console.log("\x1b[91m Red=Error \x1b[93m Yellow=Warning \x1b[0m")
+
+    //colors 
+    // \x1b[94m Blue
+    // \x1b[91m Red
+    // \x1b[93m Yellow
+    
+    //errors
+    if (!config.applicationId || (config.applicationId && config.applicationId.length !== 18)) {
+        hasError = true;
+        console.log('\x1b[91m Config applicationId missing or not 18 characters, please check. \x1b[0m')
+    }
+
+    if (!config.token) {
+        hasError = true;
+        console.log('\x1b[91m Config token missing, please add it. \x1b[0m')
+    }
+
+    if (!config.mainServer || (config.mainServer && config.mainServer.length !== 18)) {
+        hasError = true;
+        console.log('\x1b[91m Config mainserver missing or not 18 characters, please check. \x1b[0m')
+    }
+
+    if (!config.syncedServers || (config.syncedServers && !Array.isArray(config.syncedServers))) {
+        hasError = true;
+        console.log('\x1b[91m Config syncedServers missing or not Array, please verify it exists and matches structure "syncedServers": ["123456789123456789"], \x1b[0m')
+    } else {
+        for (let server of config.syncedServers) {
+            if (server.length !== 18) {
+                hasError = true;
+                console.log(`\x1b[91m Synced server id: ${server} length is not equal to 18 characters, please check the id. \x1b[0m`)
+            }
+        }
+    }
+
+    // warnings
+    if (!config.logChannelId) {
+        console.log('\x1b[93m logChannelId not found in config file, logs will not be sent. \x1b[0m')
+    }
+
+    if (!config.allowedRoleName) {
+        if (!config.allowedRoleId) {
+            console.log('\x1b[93m allowedRoleName and allowedRoleId not found in config file, only server owner can use commands \x1b[0m')
+        }
+        console.log('\x1b[93m allowedRoleName not found in config file, only server owner can use commands or user with allowedRoleId \x1b[0m')
+    }
+
+    if (!config.allowedRoleId) {
+        if (!config.allowedRoleName) {
+            console.log('\x1b[93m allowedRoleId and allowedRoleName not found in config file, only server owner can use commands \x1b[0m')
+        }
+        console.log('\x1b[93m allowedRoleId not found in config file, only server owner can use commands or user with allowedRoleName \x1b[0m')
+    }
+
+    if (hasError) {
+        console.log('\x1b[94m CONFIG FILE HAD ERROR, EXITING! \x1b[0m');
+        process.exit(1);
+    } else {
+        console.log('\x1b[94m FINISHED VERIFYING CONFIG FILE \x1b[0m');
+    }
+}
+
+verifyConfig();
+
 client.on('ready', () => {
-    //TODO: Add validation of the config file
-  console.log(`syncbot ready!`);
-  console.log(`debug mode set to ${isDebug}`);
+    console.log(`syncbot ready!`);
+    console.log(`debug mode set to ${isDebug}`);
 });
 
 client.on('interactionCreate', async interaction => {
