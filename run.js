@@ -177,13 +177,12 @@ let newAnalyze = async (interaction, forceSync) => {
     let mainServerMembers = await interaction.guild.members.fetch();
     let mainServerRoles = await interaction.guild.roles.fetch();
     let mainServerRoleNames = mainServerRoles.map(r => r.name);
-    let mainServerPremiumRole = interaction.guild.roles.premiumSubscriberRole;
+    let mainServerPremiumRole = interaction.guild.roles.premiumSubscriberRole; // for testing nitro{ id: 'mainPremium', name: 'serverBooster'} 
 
     const mainServerMe = await interaction.guild.members.fetchMe();
     const mainServerMeRole = mainServerMe.roles.botRole;
     const mainServerRolesHigherThanBot = mainServerRoles
         .filter(r => r.comparePositionTo(mainServerMeRole) > 0)
-        .filter(r => r.id !== mainServerPremiumRole.id)
         .map(r => r.name);
 
     let hasDifferingRoles = false;
@@ -192,13 +191,12 @@ let newAnalyze = async (interaction, forceSync) => {
         let syncedServerMembers = await syncedServer.members.fetch();
         let syncedServerRoles = await syncedServer.roles.fetch();
         let syncedServerRoleNames = syncedServerRoles.map(r => r.name);
-        let syncedServerPremiumRole = syncedServer.roles.premiumSubscriberRole;
+        let syncedServerPremiumRole = syncedServer.roles.premiumSubscriberRole; // for testing nitro{ id: 'syncedPremium', name: 'serverBooster'} 
 
         const syncedMe = await syncedServer.members.fetchMe();
         const syncedMeRole = syncedMe.roles.botRole;
         const syncedServerRolesHigherThanBot = syncedServerRoles
             .filter(r => r.comparePositionTo(syncedMeRole) > 0)
-            .filter(r => r.id !== syncedServerPremiumRole.id)
             .map(r => r.name);
 
         for (const syncedMember of syncedServerMembers.values()) {
@@ -215,11 +213,13 @@ let newAnalyze = async (interaction, forceSync) => {
 
                     let roleCollectionToRemove = syncedMemberRoles
                                             .filter(r => mainServerRoleNames.includes(r.name) && !mainServerMemberRoleNames.includes(r.name))
-                                            .filter(r => !mainServerRolesHigherThanBot.includes(r.name));
+                                            .filter(r => !mainServerRolesHigherThanBot.includes(r.name)
+                                            .filter(r => r.name !== syncedServerPremiumRole.name));
 
                     let roleCollectionToAdd = mainServerMemberRoles
                                             .filter(r => syncedServerRoleNames.includes(r.name) && !syncedMemberRoleNames.includes(r.name))
                                             .filter(r => !syncedServerRolesHigherThanBot.includes(r.name))
+                                            .filter(r => r.name !== mainServerPremiumRole.name)
                                             .map(role => syncedServerRoles.find(r => r.name === role.name));
                     
                     let rolesToRemoveInThisServer = [...roleCollectionToRemove.values()];
