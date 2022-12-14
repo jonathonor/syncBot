@@ -181,7 +181,10 @@ let newAnalyze = async (interaction, forceSync) => {
 
     const mainServerMe = await interaction.guild.members.fetchMe();
     const mainServerMeRole = mainServerMe.roles.botRole;
-    const mainServerRolesHigherThanBot = mainServerRoles.filter(r => r.comparePositionTo(mainServerMeRole) > 0 || r.id === mainServerPremiumRole).map(r => r.name);
+    const mainServerRolesHigherThanBot = mainServerRoles
+        .filter(r => r.comparePositionTo(mainServerMeRole) > 0)
+        .filter(r => r.id !== mainServerPremiumRole)
+        .map(r => r.name);
 
     let hasDifferingRoles = false;
     for (const server of config.syncedServers) {
@@ -193,7 +196,10 @@ let newAnalyze = async (interaction, forceSync) => {
 
         const syncedMe = await syncedServer.members.fetchMe();
         const syncedMeRole = syncedMe.roles.botRole;
-        const syncedServerRolesHigherThanBot = syncedServerRoles.filter(r => r.comparePositionTo(syncedMeRole) > 0 || r.id === syncedServerPremiumRole).map(r => r.name);
+        const syncedServerRolesHigherThanBot = syncedServerRoles
+            .filter(r => r.comparePositionTo(syncedMeRole) > 0)
+            .filter(r => r.id !== syncedServerPremiumRole)
+            .map(r => r.name);
 
         for (const syncedMember of syncedServerMembers.values()) {
             if (syncedMember.manageable && !syncedMember.user.bot) {
