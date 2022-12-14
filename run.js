@@ -213,8 +213,8 @@ let newAnalyze = async (interaction, forceSync) => {
 
                     let roleCollectionToRemove = syncedMemberRoles
                                             .filter(r => mainServerRoleNames.includes(r.name) && !mainServerMemberRoleNames.includes(r.name))
-                                            .filter(r => !mainServerRolesHigherThanBot.includes(r.name)
-                                            .filter(r => r.name !== syncedServerPremiumRole.name));
+                                            .filter(r => !mainServerRolesHigherThanBot.includes(r.name))
+                                            .filter(r => r.name !== syncedServerPremiumRole.name);
 
                     let roleCollectionToAdd = mainServerMemberRoles
                                             .filter(r => syncedServerRoleNames.includes(r.name) && !syncedMemberRoleNames.includes(r.name))
