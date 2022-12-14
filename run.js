@@ -183,7 +183,7 @@ let newAnalyze = async (interaction, forceSync) => {
     const mainServerMeRole = mainServerMe.roles.botRole;
     const mainServerRolesHigherThanBot = mainServerRoles
         .filter(r => r.comparePositionTo(mainServerMeRole) > 0)
-        .filter(r => r.id !== mainServerPremiumRole)
+        .filter(r => r.id === mainServerPremiumRole)
         .map(r => r.name);
 
     let hasDifferingRoles = false;
@@ -198,7 +198,7 @@ let newAnalyze = async (interaction, forceSync) => {
         const syncedMeRole = syncedMe.roles.botRole;
         const syncedServerRolesHigherThanBot = syncedServerRoles
             .filter(r => r.comparePositionTo(syncedMeRole) > 0)
-            .filter(r => r.id !== syncedServerPremiumRole)
+            .filter(r => r.id === syncedServerPremiumRole)
             .map(r => r.name);
 
         for (const syncedMember of syncedServerMembers.values()) {
