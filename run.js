@@ -276,10 +276,10 @@ let newAnalyze = async (interaction, forceSync) => {
                     }
                 } else {
                     // await member.roles.set([]);
-                    colorLog('error', `${syncedMember.displayName} does not exist in main server`);
+                    debugLog(`${syncedMember.displayName} does not exist in main server`);
                 }
-                debugLog(`${syncedServer.name} has differing roles from mainserver: ${hasDifferingRoles}`)
                 if (hasDifferingRoles) {
+                    debugLog(`${syncedMember.displayName} in ${syncedServer.name} has differing roles from mainserver`)
                     data.membersWithDifferences.push(memberObj);
                 }
             } else {
