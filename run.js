@@ -230,7 +230,7 @@ let newAnalyze = async (interaction, forceSync) => {
                         let remove = forceSync ? 'rolesRemovedToMatchMainserver' : 'rolesToRemoveToMatchMainserver';
                         let add = forceSync ? 'rolesAddedToMatchMainserver' : 'rolesToAddToMatchMainServer';
                         if (rolesToRemoveInThisServer.length > 0 && rolesToAddInThisServer.length === 0) {
-                            debugLog(`Roles to be removed: ${roleNamesToRemoveInThisServer} from ${syncedMember.displayName} in ${fetchedServer.name}`)
+                            debugLog(`Roles to be removed: ${roleNamesToRemoveInThisServer} from ${syncedMember.displayName} in ${syncedServer.name}`)
                             if (forceSync) {
                                 await syncedMember.roles.remove(rolesToRemoveInThisServer);
                             }
@@ -272,7 +272,7 @@ let newAnalyze = async (interaction, forceSync) => {
                     // await member.roles.set([]);
                     colorLog('error', `${syncedMember.displayName} does not exist in main server`);
                 }
-                debugLog(`${server.name} has differing roles from mainserver: ${hasDifferingRoles}`)
+                debugLog(`${syncedServer.name} has differing roles from mainserver: ${hasDifferingRoles}`)
                 if (hasDifferingRoles) {
                     data.membersWithDifferences.push(memberObj);
                 }
