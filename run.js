@@ -214,12 +214,12 @@ let newAnalyze = async (interaction, forceSync) => {
                     let roleCollectionToRemove = syncedMemberRoles
                                             .filter(r => mainServerRoleNames.includes(r.name) && !mainServerMemberRoleNames.includes(r.name))
                                             .filter(r => !mainServerRolesHigherThanBot.includes(r.name))
-                                            .filter(r => r.name !== syncedServerPremiumRole.name);
+                                            .filter(r => syncedServerPremiumRole && (r.name !== syncedServerPremiumRole.name));
 
                     let roleCollectionToAdd = mainServerMemberRoles
                                             .filter(r => syncedServerRoleNames.includes(r.name) && !syncedMemberRoleNames.includes(r.name))
                                             .filter(r => !syncedServerRolesHigherThanBot.includes(r.name))
-                                            .filter(r => r.name !== mainServerPremiumRole.name)
+                                            .filter(r => mainServerPremiumRole && (r.name !== mainServerPremiumRole.name))
                                             .map(role => syncedServerRoles.find(r => r.name === role.name));
                     
                     let rolesToRemoveInThisServer = [...roleCollectionToRemove.values()];
