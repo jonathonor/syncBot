@@ -1,6 +1,6 @@
 {
     "token": "BOT TOKEN HERE",
-    "clientId": "BOT CLIENT ID HERE",
+    "applicationId": "BOT CLIENT ID HERE, also called application id",
     "mainServer": "INSERT MAIN SERVER ID HERE",
     "syncedServers": ["INSERT SYNCED SERVER ID HERE", "INSERT ADDITIONAL SYNCED SERVER ID HERE (delete if only syncing one server)"],
     "allowedRoleId": "Role ID in main server of users who you want to let add/remove role",
