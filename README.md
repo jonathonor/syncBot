@@ -30,6 +30,10 @@ A bot that sync roles between multiple synced servers, and one main server.</p>
   </p>
 </div>
 
+<div align="center">
+  <a href='https://ko-fi.com/L3L8HSMV0' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+</div>
+
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
