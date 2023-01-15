@@ -66,7 +66,7 @@ const rest = new REST({ version: '9' }).setToken(config.token);
 
     // TODO: do we want global, or for each of the synced servers if logic reversed
     await rest.put(
-      Routes.applicationCommands(config.clientId),
+      Routes.applicationCommands(config.applicationId),
       { body: commands },
     );
 
