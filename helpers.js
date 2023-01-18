@@ -1,3 +1,6 @@
+import { client, globals, isDebug } from "./globals.js";
+import config from "./config.js";
+
 /**
  * 
  * @param {the interaction from discord command message} interaction 
@@ -35,7 +38,7 @@ export const iterateThroughMembers = async (interaction, action, callback, optio
 
 // Responds to each (/) slash command with outcome of the command, if this was triggered by a client event or an error, it logs the outcome to the log channel denoted in config
 export const respondToInteraction = async (interaction, message, error = null) => {
-  const mainServer = await interaction.client.guilds.fetch(config.mainServer).catch(err => console.log(`RESPOND_TO_INTERACTION-FETCH_MAINSERVER: ${err}`));
+  const mainServer = await client.guilds.fetch(config.mainServer).catch(err => console.log(`RESPOND_TO_INTERACTION-FETCH_MAINSERVER: ${err}`));
   const logChannel = await mainServer.channels.fetch(config.logChannelId).catch(err => console.log(`RESPOND_TO_INTERACTION-FETCH_LOGCHANNEL: ${err}`));
   if (!!logChannel && (!interaction || interaction.isReplied)) {
       await logChannel.send(message).catch(err => console.log(`RESPOND_TO_INTERACTION-SENDING_TO_LOGCHANNEL ERROR: ${err}`));
@@ -53,7 +56,7 @@ export const respondToInteraction = async (interaction, message, error = null) =
 
 let throttleUpdate = () => {
   setTimeout(() => {
-      triggeredByIntention = false;
+      globals.triggeredByIntention = false;
   }, 2000);
 }
 
