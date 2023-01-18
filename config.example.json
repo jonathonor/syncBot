@@ -1,9 +1,0 @@
-{
-    "token": "BOT TOKEN HERE",
-    "applicationId": "BOT CLIENT ID HERE, also called application id",
-    "mainServer": "INSERT MAIN SERVER ID HERE",
-    "syncedServers": ["INSERT SYNCED SERVER ID HERE", "INSERT ADDITIONAL SYNCED SERVER ID HERE (delete if only syncing one server)"],
-    "allowedRoleId": "Role ID in main server of users who you want to let add/remove role",
-    "allowedRoleName": "***Used for runReverse only, input the ROLE NAME of users who you want to let add/remove role",
-    "logChannelId": "INSERT LOG CHANNEL ID HERE (must be in server 1)"
-}

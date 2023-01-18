@@ -5,7 +5,7 @@
  * @param {the function to execute after all members have been processed with the action} callback 
  * @param {any options that need to be passed through to the action or callback} options 
  */
-export let iterateThroughMembers = async (interaction, action, callback, options) => {
+export const iterateThroughMembers = async (interaction, action, callback, options) => {
   let data = { membersAnalyzed: 0, membersWithDifferences: [], errors: [] };
   interaction.guild.members
     .fetch()
@@ -33,24 +33,8 @@ export let iterateThroughMembers = async (interaction, action, callback, options
     .catch(console.log);
 };
 
-// Verifies that the user who sent the command has the designated commanderRole from the config file.
-export let verifyUser = (id, guildId = config.mainServer) => {
-    return client.guilds.fetch(guildId).then(guild => {
-        return guild.members.fetch(id).then(member => {
-            let matchesRoleName = member.roles.cache.find(r => r.name === config.allowedRoleName);
-            debugLog(`VERIFICATION OF ${member.displayName} IN ${guild.name}`)
-            debugLog(`Role name matches config: ${!!matchesRoleName}`);
-            debugLog(`Role id matches config: ${member._roles.includes(config.allowedRoleId)}`);
-            debugLog(`Is guild owner: ${guild.ownerId === member.id}`);
-
-            return member._roles.includes(config.allowedRoleId) || (guild.ownerId === member.id) || !!matchesRoleName;
-        }).catch(err => console.log(`VERIFYUSER_MEMBER-FETCH_${id} ERROR: ${err}`));
-    }).catch(err => console.log(`VERIFYUSER_GUILD-FETCH_${guildId} ERROR: ${err}`));
-}
-
-
 // Responds to each (/) slash command with outcome of the command, if this was triggered by a client event or an error, it logs the outcome to the log channel denoted in config
-export let respondToInteraction = async (interaction, message, error = null) => {
+export const respondToInteraction = async (interaction, message, error = null) => {
   const mainServer = await interaction.client.guilds.fetch(config.mainServer).catch(err => console.log(`RESPOND_TO_INTERACTION-FETCH_MAINSERVER: ${err}`));
   const logChannel = await mainServer.channels.fetch(config.logChannelId).catch(err => console.log(`RESPOND_TO_INTERACTION-FETCH_LOGCHANNEL: ${err}`));
   if (!!logChannel && (!interaction || interaction.isReplied)) {
@@ -73,13 +57,13 @@ let throttleUpdate = () => {
   }, 2000);
 }
 
-export let debugLog = (str) => {
+export const debugLog = (str) => {
   if (isDebug) {
       console.log(str);
   }
 }
 
-export let colorLog = (color, message) => {
+export const colorLog = (color, message) => {
   //colors 
     // \x1b[91m Red
     // \x1b[93m Yellow
