@@ -1,3 +1,5 @@
+import { debugLog } from "../helpers.js";
+
 // When a member leaves the main server, all roles they had there should be removed from synced servers
 export const memberRemoveHandler = async removedMember => {
     if (removedMember.guild.id === config.mainServer) {

@@ -8,7 +8,7 @@ describe("Member Add Handler", () => {
     // no roles should be added to the joining member
     it("if member is not in main server, no roles are added, and logchannel message is sent", async () => {
         memberAddHandler(addedMember);
-        expect()
+        expect();
     });
 
     // when a member joins a synced server, and that member is in the main server
@@ -17,7 +17,7 @@ describe("Member Add Handler", () => {
     // joined server should be added to the joining member
     it("if server id is listed as a synced server, role is added to member, and logchannel message is sent", async () => {
         memberAddHandler(addedMember);
-        expect()
+        expect();
     });
 
     // when a member joins a synced server, and that member is in the main server
@@ -26,21 +26,21 @@ describe("Member Add Handler", () => {
     // to joining member
     it("does not try to add non-existent named role", async () => {
         memberAddHandler(addedMember);
-        expect()
+        expect();
     });
 
     // when a member joins a synced server, and that member is in the main server
     // the bot should not attempt to add @everyone role to joining member
     it("does not try to add @everyone role", async () => {
         memberAddHandler(addedMember);
-        expect()
+        expect();
     });
 
     // when a member joins a synced server, and that member is in the main server
     // the bot should not attempt to a nitro boosted role to joining member
     it("does not try to add nitro boosted role", async () => {
         memberAddHandler(addedMember);
-        expect()
+        expect();
     });
 
     // when a member joins a synced server, and that member is in the main server
@@ -49,6 +49,6 @@ describe("Member Add Handler", () => {
     // to joining member
     it("does not try to add role that is higher than bots role", async () => {
         memberAddHandler(addedMember);
-        expect()
+        expect();
     });
 });

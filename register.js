@@ -1,8 +1,6 @@
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
-var config = require('./config.json')
+import config from "./config";
 
 const commands = [{
   name: 'add',

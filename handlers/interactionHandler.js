@@ -7,8 +7,8 @@ import config from "../config.js";
 
 export const interactionHandler = async interaction => {
     if (interaction.type !== 2) return; // 2 === APPLICATION_COMMAND
-    if (!interaction.guildId) {
-        respondToInteraction(interaction, 'This command must be sent from a guild/server.');
+    if (!interaction.guildId || interaction.guildId !== config.mainServer) {
+        respondToInteraction(interaction, 'This command must be sent from your mainserver.');
         return;
     }
 

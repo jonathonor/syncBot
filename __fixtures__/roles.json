@@ -1,0 +1,14 @@
+[
+    {
+        "name": "adminRole"
+    },
+    {
+        "name": "botRole"
+    },
+    {
+        "name": "regularRole"
+    },
+    {
+        "name": "nitroRole"
+    }
+]

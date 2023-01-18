@@ -9,11 +9,11 @@ describe("Member Update Handler", () => {
 
     it("if role is added to user in main server, role is added in each synced server", async () => {
         memberUpdateHandler(originalMember, updatedMember);
-        expect()
+        expect();
     });
 
     it("if role is removed from user in main server, role is removed in each synced server", async () => {
         memberUpdateHandler(originalMember, updatedMember);
-        expect()
+        expect();
     });
 });

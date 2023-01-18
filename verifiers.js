@@ -57,7 +57,7 @@ export const verifyConfig = () => {
     }
 }
 
-// Verifies that the user who sent the command has the designated commanderRole from the config file.
+// Verifies that the user who sent the command has the designated role from the config file.
 export const verifyUser = async (id, guildId = config.mainServer) => {
     return client.guilds.fetch(guildId).then(guild => {
         return guild.members.fetch(id).then(member => {

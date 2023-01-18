@@ -1,0 +1,14 @@
+[
+    {
+        "name": "Main Server",
+        "id": 1
+    },
+    {
+        "name": "Synced Server 1",
+        "id": 2
+    },
+    {
+        "name": "Synced Server 2",
+        "id": 3
+    }
+]
