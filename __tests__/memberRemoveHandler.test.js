@@ -4,6 +4,9 @@ describe("Member Remove Handler", () => {
     const removedMember = {
     };
 
+    // when a member leaves the main server
+    // for each of the synced servers, if this member exists there, 
+    // for each role name the user had in the main server, the bot should remove the role 
     it("if member is leaving main server, role is removed from member in each synced server, and logchannel message is sent", async () => {
         memberRemoveHandler(removedMember);
         expect()

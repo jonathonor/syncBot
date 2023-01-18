@@ -1,8 +1,9 @@
 import { debugLog, respondToInteraction } from "../helpers.js";
 import { addRole } from "../commands/addRole.js";
 import { removeRole } from "../commands/removeRole.js";
-import { globals } from "../globals.js";
+import { client, globals } from "../globals.js";
 import { verifyUser } from "../verifiers.js";
+import config from "../config.js";
 
 export const interactionHandler = async interaction => {
     if (interaction.type !== 2) return; // 2 === APPLICATION_COMMAND
@@ -57,7 +58,6 @@ export const interactionHandler = async interaction => {
                 }
             }
         }
-
     });
 }
 
@@ -76,6 +76,9 @@ const newAnalyze = async (interaction, forceSync) => {
         .filter(r => r.comparePositionTo(mainServerMeRole) > 0)
         .map(r => r.name);
 
+    debugLog(`Main server roles higher than bot: ${mainServerRolesHigherThanBot}`);
+    debugLog(`Main server premium role ${mainServerPremiumRole}`);
+
     let hasDifferingRoles = false;
     for (const server of config.syncedServers) {
         let syncedServer = await client.guilds.fetch(server).catch(err => console.log(`ANALYZE_SYNCEDSERVER-${server}_FETCH ERROR: ${err}`));
@@ -90,9 +93,12 @@ const newAnalyze = async (interaction, forceSync) => {
             .filter(r => r.comparePositionTo(syncedMeRole) > 0)
             .map(r => r.name);
 
+        debugLog(`Synced server roles higher than bot: ${syncedServerRolesHigherThanBot}`);
+        debugLog(`Synced server premium role: ${syncedServerPremiumRole}`);
+
         for (const syncedMember of syncedServerMembers.values()) {
             if (syncedMember.manageable && !syncedMember.user.bot) {
-                let memberObj = {username: interaction.member.displayName, serversWithDifferingRoles: []};
+                let memberObj = {username: syncedMember.displayName, serversWithDifferingRoles: []};
 
                 let syncedMemberRoles = syncedMember.roles.cache;
                 let syncedMemberRoleNames = syncedMemberRoles.map(r => r.name);
@@ -105,20 +111,22 @@ const newAnalyze = async (interaction, forceSync) => {
                     let roleCollectionToRemove = syncedMemberRoles
                                             .filter(r => mainServerRoleNames.includes(r.name) && !mainServerMemberRoleNames.includes(r.name))
                                             .filter(r => !mainServerRolesHigherThanBot.includes(r.name))
-                                            .filter(r => syncedServerPremiumRole && (r.name !== syncedServerPremiumRole.name));
+                                            .filter(r => !syncedServerPremiumRole ||  (syncedServerPremiumRole && (r.name !== syncedServerPremiumRole.name)));
 
                     let roleCollectionToAdd = mainServerMemberRoles
                                             .filter(r => syncedServerRoleNames.includes(r.name) && !syncedMemberRoleNames.includes(r.name))
                                             .filter(r => !syncedServerRolesHigherThanBot.includes(r.name))
-                                            .filter(r => mainServerPremiumRole && (r.name !== mainServerPremiumRole.name))
+                                            .filter(r => !mainServerPremiumRole  || (mainServerPremiumRole && (r.name !== mainServerPremiumRole.name)))
                                             .map(role => syncedServerRoles.find(r => r.name === role.name));
                     
                     let rolesToRemoveInThisServer = [...roleCollectionToRemove.values()];
                     let roleNamesToRemoveInThisServer = rolesToRemoveInThisServer.map(r => r.name);
+                    debugLog(`Roles ${syncedMember.displayName} has in ${syncedServer.name}: ${syncedMemberRoleNames}`);
                     debugLog(`Roles ${syncedMember.displayName} has in ${syncedServer.name} but not in mainserver: ${roleNamesToRemoveInThisServer}`);
     
                     let rolesToAddInThisServer = [...roleCollectionToAdd.values()];
                     let roleNamesToAddInThisServer = rolesToAddInThisServer.map(r => r.name);
+                    debugLog(`Roles ${syncedMember.displayName} has in mainserver: ${mainServerMemberRoleNames}`);
                     debugLog(`Roles ${syncedMember.displayName} has in mainserver but not in ${syncedServer.name}: ${roleNamesToAddInThisServer}`);
 
 

@@ -1,3 +1,4 @@
+// When user joins a synced server, all roles from the mainserver should be added to them.
 export const memberAddHandler = async addedMember => {
     debugLog(`${addedMember.displayName} joined ${addedMember.guild.name}`);
     if (config.syncedServers.includes(addedMember.guild.id)) {
