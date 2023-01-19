@@ -21,7 +21,7 @@ export let removeRole = async (member, roleId, interaction = null) => {
             let memberHasRole = memberToSync.roles.cache.find(a => a.name === syncedServerRoleToRemove.name);
 
             if (memberHasRole) {
-                memberToSync.roles.remove(syncedServerRoleToRemove).catch(err => respondToInteraction(interaction, `There was an error removing the role in a synced server named: ${serverToSync.name}, see console for error`, err));
+                await memberToSync.roles.remove(syncedServerRoleToRemove).catch(err => respondToInteraction(interaction, `There was an error removing the role in a synced server named: ${serverToSync.name}, see console for error`, err));
                 respondToInteraction(interaction, `Removed ${mainServerRoleToRemove.name} from ${member.user.username} in ${serverToSync.name}`);
             } else {
                 respondToInteraction(interaction, `${member.user.username} did not have role: ${mainServerRoleToRemove.name} in ${serverToSync.name} to remove.`);

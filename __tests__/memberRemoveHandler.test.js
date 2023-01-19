@@ -1,7 +1,34 @@
+import { jest } from "@jest/globals";
 import { memberRemoveHandler } from "../handlers/memberRemoveHandler";
 
 describe("Member Remove Handler", () => {
+    const mainServerRole = {
+        name: "role1"
+    };
+
+    const logChannel = {
+        send: jest.fn()
+    }
+
     const removedMember = {
+        displayName: "Member 1",
+        guild: {
+            name: "Main Server",
+            id: "1",
+            channels: {
+                fetch: jest.fn().mockReturnValue(logChannel)
+            },
+            members: {
+                fetch: jest.fn()
+            },
+            roles: {
+                fetch: jest.fn().mockReturnValue(mainServerRole)
+            }
+        },
+        roles: {
+            fetch: jest.fn().mockReturnValue(mainServerRole),
+            remove: jest.fn()
+        }
     };
 
     // when a member leaves the main server
