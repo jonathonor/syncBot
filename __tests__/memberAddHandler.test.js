@@ -1,7 +1,57 @@
 import { memberAddHandler } from "../handlers/memberAddHandler";
+import config from "../config";
 
 describe("Member Add Handler", () => {
+    const logChannel = {
+        send: jest.fn()
+    }
+
+    const mainServerMemberRoles = {
+        "1": {
+            id: "1",
+            name: "role1"
+        }
+    }
+
+    const mainServerMember = {
+        displayName: "Member 1",
+        user: {
+            id: "1"
+        },
+        roles: {
+            fetch: jest.fn().mockReturnValue(mainServerMemberRoles)
+        }
+
+    }
+
+    const mainServer = {
+        id: "1",
+        name: "Main Server",
+        members: {
+            fetch: jest.fn().mockReturnValue(mainServerMember)
+        },
+        channels: {
+            fetch: jest.fn().mockReturnValue(logChannel)
+        }
+    }
+
     const addedMember = {
+        displayName: "Member 1",
+        user: {
+            id: "1"
+        },
+        guild: {
+            name: "Main Server",
+            id: 1
+        },
+        client: {
+            guilds : {
+                fetch: jest.fn().mockReturnValue(mainServer)
+            }
+        },
+        roles: {
+            add: jest.fn()
+        }
     };
 
     // when a member joins a synced server, but that member is not in the main server

@@ -1,11 +1,14 @@
 import { debugLog } from "../helpers.js";
+import config from "../config.js";
 
 // When user joins a synced server, all roles from the mainserver should be added to them.
 export const memberAddHandler = async addedMember => {
     debugLog(`${addedMember.displayName} joined ${addedMember.guild.name}`);
     if (config.syncedServers.includes(addedMember.guild.id)) {
         debugLog(`Config lists ${addedMember.guild.name} as synced server.`);
-        const mainServer = await client.guilds.fetch(config.mainServer).catch(err => `MEMBERJOINED-MAINSERVER-FETCH ERROR: ${err}`);
+        const mainServer = await addedMember.client.guilds.fetch(config.mainServer).catch(err => `MEMBERJOINED-MAINSERVER-FETCH ERROR: ${err}`);
+        const logChannel = await mainServer.channels.fetch(config.logChannelId).catch(err => console.log(`MEMBERJOINED-LOGCHANNEL-FETCH ERROR: ${err}`));
+
         debugLog(`Fetched mainserver: ${mainServer.name}`);
         const mainServerMember = await mainServer.members.fetch(addedMember.user.id).catch(e => console.log(`MEMBERJOINED-NOT-IN-MAINSERVER ERROR: ${e}`));
         if (mainServerMember) {
@@ -21,7 +24,6 @@ export const memberAddHandler = async addedMember => {
                 debugLog(`Adding roles from mainserver: ${mainServerMemberRolesFiltered.map(r => r.name)} for ${addedMember.displayName} in ${addedMember.guild.name}`);
 
                 let guildToSyncRoles = await guildToSync.roles.fetch().catch(err => console.log(`MEMBERJOINED-ROLES-FETCH ERROR: ${err}`));
-                const logChannel = await mainServer.channels.fetch(config.logChannelId).catch(err => console.log(`MEMBERJOINED-LOGCHANNEL-FETCH ERROR: ${err}`));
 
                 for (role in mainServerMemberRolesFiltered) {
                     let roleToAdd = guildToSyncRoles.find(r => r.name === role.name);

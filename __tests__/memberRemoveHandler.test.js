@@ -7,17 +7,17 @@ describe("Member Remove Handler", () => {
     // when a member leaves the main server
     // for each of the synced servers, if this member exists there, 
     // for each role name the user had in the main server, the bot should remove the role 
-    it("if member is leaving main server, role is removed from member in each synced server, and logchannel message is sent", async () => {
+    it("if member leaves the main server, role is removed from member in each synced server, and logchannel message is sent", async () => {
         memberRemoveHandler(removedMember);
         expect();
     });
 
-    it("if member is leaving main server, if user only has role that is premium (nitro), no roles are removed from synced servers", async () => {
+    it("if member leaves the  main server, if user only has role that is premium (nitro), no roles are removed from synced servers", async () => {
         memberRemoveHandler(removedMember);
         expect();
     });
 
-    it("if member is leaving main server, if user only has role that is higher than bots, no roles are removed from synced servers", async () => {
+    it("if member leaves the main server, if user only has role that is higher than bots, no roles are removed from synced servers", async () => {
         memberRemoveHandler(removedMember);
         expect();
     });
