@@ -1,7 +1,7 @@
 import { debugLog, respondToInteraction } from "../helpers.js";
 import { addRole } from "../commands/addRole.js";
 import { removeRole } from "../commands/removeRole.js";
-import { client, globals } from "../globals.js";
+import { globals } from "../globals.js";
 import { verifyUser } from "../verifiers.js";
 import config from "../config.js";
 
@@ -81,7 +81,7 @@ const newAnalyze = async (interaction, forceSync) => {
 
     let hasDifferingRoles = false;
     for (const server of config.syncedServers) {
-        let syncedServer = await client.guilds.fetch(server).catch(err => console.log(`ANALYZE_SYNCEDSERVER-${server}_FETCH ERROR: ${err}`));
+        let syncedServer = await globals.client.guilds.fetch(server).catch(err => console.log(`ANALYZE_SYNCEDSERVER-${server}_FETCH ERROR: ${err}`));
         let syncedServerMembers = await syncedServer.members.fetch().catch(err => console.log(`ANALYZE_SYNCEDSERVER-${server}_FETCHMEMBERS ERROR: ${err}`));
         let syncedServerRoles = await syncedServer.roles.fetch().catch(err => console.log(`ANALYZE_SYNCEDSERVER-${server}_FETCHROLES ERROR: ${err}`));
         let syncedServerRoleNames = syncedServerRoles.map(r => r.name);

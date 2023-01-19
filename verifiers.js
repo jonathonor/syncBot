@@ -1,6 +1,6 @@
 import { colorLog, debugLog } from "./helpers.js";
 import config from "./config.js";
-import { client, isDebug } from "./globals.js";
+import { globals, isDebug } from "./globals.js";
 
 // Verifies that the config file is correctly configured based on types expected
 export const verifyConfig = () => {
@@ -59,7 +59,7 @@ export const verifyConfig = () => {
 
 // Verifies that the user who sent the command has the designated role from the config file.
 export const verifyUser = async (id, guildId = config.mainServer) => {
-    return client.guilds.fetch(guildId).then(guild => {
+    return globals.client.guilds.fetch(guildId).then(guild => {
         return guild.members.fetch(id).then(member => {
             let matchesRoleName = member.roles.cache.find(r => r.name === config.allowedRoleName);
             debugLog(`VERIFICATION OF ${member.displayName} IN ${guild.name}`)
@@ -78,7 +78,7 @@ export const verifyBotIsInAllServers = async () => {
     console.log(`debug mode set to ${isDebug}`);
 
     colorLog('info', `VERIFYING BOT IS IN ALL SERVER ID's IN CONFIG FILE`);
-    const guildsBotIsIn = await client.guilds.fetch().catch(err => console.log(`ONREADY-FETCH_GUILDS: ${err}`));
+    const guildsBotIsIn = await globals.client.guilds.fetch().catch(err => console.log(`ONREADY-FETCH_GUILDS: ${err}`));
     if (!guildsBotIsIn.findKey(guild => guild.id === config.mainServer)) {
         hasError = true;
         colorLog('error', `Bot is not in main server with id: ${config.mainServer} Please invite bot to server and restart bot.`);
@@ -91,8 +91,15 @@ export const verifyBotIsInAllServers = async () => {
         }
     }
 
+    if (hasError) {
+        colorLog('error', 'BOT NOT IN A SERVER LISTED IN CONFIG, EXITING!');
+        process.exit(1);
+    } else {
+        colorLog('info', 'FINISHED VERIFYING BOT IS IN ALL SERVERS FROM CONFIG FILE');
+    }
+
     if (config.logChannelId) {
-        const mainServer = await client.guilds.fetch(config.mainServer).catch(err => console.log(`ONREADY-FETCH_MAINSERVER: ${err}`));
+        const mainServer = await globals.client.guilds.fetch(config.mainServer).catch(err => console.log(`ONREADY-FETCH_MAINSERVER: ${err}`));
         const logChannel = await mainServer.channels.fetch(config.logChannelId).catch(err => console.log(`ONREADY-FETCH_LOGCHANNEL: ${err}`));
         
         return await logChannel.send("Testing bot has access to logchannel.")
@@ -101,13 +108,6 @@ export const verifyBotIsInAllServers = async () => {
             console.log(`ONREADY-SENDING_TO_LOGCHANNEL ERROR: ${err}`);
             process.exit(1);
         });
-    }
-
-    if (hasError) {
-        colorLog('error', 'BOT NOT IN A SERVER LISTED IN CONFIG, EXITING!');
-        process.exit(1);
-    } else {
-        colorLog('info', 'FINISHED VERIFYING BOT IS IN ALL SERVERS FROM CONFIG FILE');
     }
 
     return;

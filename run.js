@@ -19,21 +19,21 @@ import { memberRemoveHandler } from "./handlers/memberRemoveHandler.js";
 import { memberUpdateHandler } from "./handlers/memberUpdateHandler.js";
 
 import { verifyConfig } from "./verifiers.js";
-import { client } from "./globals.js";
+import { globals } from "./globals.js";
 
 verifyConfig();
 
-client.on('ready', onReadyHandler);
+globals.client.on('ready', onReadyHandler);
 
-client.on('interactionCreate', interactionHandler);
+globals.client.on('interactionCreate', interactionHandler);
 
 // When a new user joins a synced server, then look for that users roles in the main server and apply them in the synced server.
-client.on('guildMemberAdd', memberAddHandler);
+globals.client.on('guildMemberAdd', memberAddHandler);
 
 // When a user leaves the main server, then remove all of matching roles from all synced servers.
-client.on('guildMemberRemove', memberRemoveHandler);
+globals.client.on('guildMemberRemove', memberRemoveHandler);
 
 // When a users roles are updated in the main server, update them in all synced servers.
-client.on('guildMemberUpdate', memberUpdateHandler);
+globals.client.on('guildMemberUpdate', memberUpdateHandler);
 
-client.login(config.token);
+globals.client.login(config.token);

@@ -1,5 +1,4 @@
 import { interactionHandler } from "../handlers/interactionHandler";
-import guilds from "../__fixtures__/guilds.json";
 
 describe("Interaction Handler", () => {
     const interaction = {

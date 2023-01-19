@@ -1,4 +1,5 @@
 import { debugLog } from "../helpers.js";
+import config from "../config.js";
 
 // When a member leaves the main server, all roles they had there should be removed from synced servers
 export const memberRemoveHandler = async removedMember => {
@@ -12,14 +13,14 @@ export const memberRemoveHandler = async removedMember => {
         const logChannel = await mainServer.channels.fetch(config.logChannelId).catch(err => `MEMBERLEFT-MAINSERVER-LOGHANNEL-FETCH ERROR: ${err}`);
 
         for (const server of config.syncedServers) {
-            const guildToSync = await client.guilds.fetch(server).catch(err => `MEMBERLEFT-SYNCEDSERVER-FETCH_${server} ERROR: ${err}`);
+            const guildToSync = await removedMember.client.guilds.fetch(server).catch(err => `MEMBERLEFT-SYNCEDSERVER-FETCH_${server} ERROR: ${err}`);
             const memberToSync = await guildToSync.members.fetch(removedMember.user.id).catch(e => console.log(`MEMBERLEFT-NOT-IN-MAINSERVER ERROR: ${e}`));
             if (memberToSync) {
                 debugLog(`Removing roles ${mainServerRoleNames} from ${removedMember.displayName} in: ${guildToSync.name}`);
                 if (mainServerRoleNames.length > 0) {
                     let syncedServerRoles = await guildToSync.roles.fetch().catch(err => `MEMBERLEFT-SYNCEDSERVER-ROLES-FETCH_${server} ERROR: ${err}`);
                     
-                    for (roleName in mainServerRoleNames) {
+                    for (const roleName of mainServerRoleNames) {
                         let roleToRemove = syncedServerRoles.find(r => r.name === roleName);
                         if (roleToRemove) {
                             await memberToSync.roles.remove(roleToRemove).catch(err => console.log(`MEMBER_LEFT-REMOVING_ROLE_${memberToSync.displayName}_${roleToRemove.name} ERROR: ${err}`));
