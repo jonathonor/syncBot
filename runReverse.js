@@ -245,8 +245,12 @@ let roleAnalyzeCallback = (interaction, data, forceSync) => {
 
 // Manual function registered to (/) slash command to add a role from a user in the synced server and main server
 let addRole = async (member, role, interaction = null) => {
-  const mainServer = await client.guilds.fetch(config.mainServer);
-  const mainServerRoles = await mainServer.roles.fetch();
+  const mainServer = await client.guilds
+    .fetch(config.mainServer)
+    .catch((e) => console.log(`ADDROLE_MAINSERVER_FETCH Error: ${e}`));
+  const mainServerRoles = await mainServer.roles
+    .fetch()
+    .catch((e) => console.log(`ADDROLE_MAINSERVER-ROLES_FETCH Error: ${e}`));
   const serverCommandWasInRoleToAdd = member.roles.resolve(role);
 
   mainServer.members
@@ -292,8 +296,12 @@ let addRole = async (member, role, interaction = null) => {
 
 // Manual function registered to (/) slash command to remove a role from a user in the synced server and main server
 let removeRole = async (member, role, interaction = null) => {
-  const mainServer = await client.guilds.fetch(config.mainServer);
-  const mainServerRoles = await mainServer.roles.fetch();
+  const mainServer = await client.guilds
+    .fetch(config.mainServer)
+    .catch((e) => console.log(`REMOVEROLE_MAINSERVER_FETCH Error: ${e}`));
+  const mainServerRoles = await mainServer.roles
+    .fetch()
+    .catch((e) => console.log(`REMOVEROLE_MAINSERVER-ROLES_FETCH Error: ${e}`));
   const serverCommandWasInRoleToRemove = member.roles.resolve(role);
 
   mainServer.members
@@ -383,11 +391,6 @@ let respondToInteraction = async (interaction, message, error = null) => {
 
 // When a users roles are updated in a synced server, update them in the main server.
 client.on("guildMemberUpdate", async (oldMember, newMember) => {
-  console.log(
-    "1",
-    !triggeredByIntention,
-    config.syncedServers.includes(newMember.guild.id)
-  );
   if (
     !triggeredByIntention &&
     config.syncedServers.includes(newMember.guild.id)
@@ -412,12 +415,24 @@ client.on("guildMemberAdd", async (addedMember) => {
   if (config.mainServer === addedMember.guild.id) {
     const mainServer = addedMember.guild;
     let mainServerMember = addedMember;
-    let mainServerRoles = await mainServer.roles.fetch();
-    const logChannel = await mainServer.channels.fetch(config.logChannelId);
+    let mainServerRoles = await mainServer.roles
+      .fetch()
+      .catch((e) =>
+        console.log(`GUILDMEMBERADD_MAINSERVER-ROLES_FETCH Error: ${e}`)
+      );
+    const logChannel = await mainServer.channels
+      .fetch(config.logChannelId)
+      .catch((e) => console.log(`GUILDMEMBERADD_LOGCHANNEL_FETCH Error: ${e}`));
 
     for (const server of config.syncedServers) {
-      const guildToSync = await client.guilds.fetch(server);
-      let memberToSync = await guildToSync.members.fetch(addedMember.user.id);
+      const guildToSync = await client.guilds
+        .fetch(server)
+        .catch((e) =>
+          console.log(`GUILDMEMBERADD_SYNCEDSERVER_FETCH Error: ${e}`)
+        );
+      let memberToSync = await guildToSync.members
+        .fetch(addedMember.user.id)
+        .catch((e) => console.log(`GUILDMEMBERADD_MEMBER_FETCH Error: ${e}`));
       if (memberToSync) {
         let thisServerRoles = [...memberToSync.roles.cache.values()].filter(
           (r) => r.name !== "@everyone"
@@ -428,7 +443,9 @@ client.on("guildMemberAdd", async (addedMember) => {
             if (roleToAdd && roleToAdd.id && roleToAdd.name) {
               mainServerMember.roles
                 .add(roleToAdd)
-                .catch((err) => console.log(err));
+                .catch((e) =>
+                  console.log(`GUILDMEMBERADD_ROLE_ADD Error: ${e}`)
+                );
             }
           });
           logChannel.send(
@@ -445,31 +462,29 @@ client.on("guildMemberRemove", async (removedMember) => {
   if (config.syncedServers.includes(removedMember.guild.id)) {
     const mainServer = await client.guilds
       .fetch(config.mainServer)
-      .catch((err) => `GUILD_MEMBER_REMOVE-MAINSERVER_FETCH: ${err}`);
+      .catch((err) => `GUILDMEMBERREMOVE-MAINSERVER_FETCH: ${err}`);
     let mainServerRoles = await mainServer.roles
       .fetch()
-      .catch((err) => `GUILD_MEMBER_REMOVE-MAINSERVER_ROLES_FETCH: ${err}`);
+      .catch((err) => `GUILDMEMBERREMOVE-MAINSERVER_ROLES_FETCH: ${err}`);
 
     let syncedServerMemberRoles = removedMember.roles.cache;
 
     const logChannel = await mainServer.channels
       .fetch(config.logChannelId)
-      .catch(
-        (err) => `GUILD_MEMBER_REMOVE-MAINSERVER_LOGCHANNEL_FETCH: ${err}`
-      );
+      .catch((err) => `GUILDMEMBERREMOVE-MAINSERVER_LOGCHANNEL_FETCH: ${err}`);
     for (const [roleId, role] of syncedServerMemberRoles.entries()) {
       let roleToRemove = mainServerRoles.find(
         (r) => r.name === role.name && r.name !== "@everyone"
       );
       let mainServerMember = await mainServer.members
         .fetch(removedMember.user.id)
-        .catch((err) => `GUILD_MEMBER_REMOVE-MEMBER_FETCH: ${err}`);
+        .catch((err) => `GUILDMEMBERREMOVE-MEMBER_FETCH: ${err}`);
 
       if (roleToRemove && mainServerMember) {
         let roleResolvable = await mainServer.roles.fetch(roleToRemove.id);
         await mainServerMember.roles
           .remove(roleResolvable)
-          .catch((err) => `GUILD_MEMBER_REMOVE_ROLE: ${err}`);
+          .catch((err) => `GUILDMEMBERREMOVE_ROLE: ${err}`);
         logChannel.send(
           `Removing roles from: ${mainServerMember.user.username} in server: ${mainServer.name} since they left a synced server: ${removedMember.guild.name}`
         );
