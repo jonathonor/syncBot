@@ -353,14 +353,21 @@ let throttleUpdate = () => {
 
 // Verifies that the user who sent the command has the designated commanderRole from the config file.
 let verifyUser = (id) => {
-  return client.guilds.fetch(config.mainServer).then((guild) => {
-    return guild.members.fetch(id).then((member) => {
-      return (
-        member.roles.cache.find((r) => r.name === config.allowedRoleName) !==
-          undefined || guild.ownerId === member.id
-      );
-    });
-  });
+  return client.guilds
+    .fetch(config.mainServer)
+    .then((guild) => {
+      return guild.members
+        .fetch(id)
+        .then((member) => {
+          return (
+            member.roles.cache.find(
+              (r) => r.name === config.allowedRoleName
+            ) !== undefined || guild.ownerId === member.id
+          );
+        })
+        .catch((err) => `VERIFYUSER_MEMBER_FETCH: ${err}`);
+    })
+    .catch((err) => `VERIFYUSER_CLIENT_GUILDS_FETCH: ${err}`);
 };
 
 // Responds to each (/) slash command with outcome of the command, if this was triggered by a client event or an error, it logs the outcome to the log channel denoted in config
@@ -448,9 +455,11 @@ client.on("guildMemberAdd", async (addedMember) => {
                 );
             }
           });
-          logChannel.send(
-            `Syncing roles from server: ${guildToSync.name} for new member: ${mainServerMember.user.username}`
-          );
+          await logChannel
+            .send(
+              `Syncing roles from server: ${guildToSync.name} for new member: ${mainServerMember.user.username}`
+            )
+            .catch((err) => `GUILDMEMBERADD_LOGCHANNEL_SEND: ${err}`);
         }
       }
     }
@@ -481,13 +490,17 @@ client.on("guildMemberRemove", async (removedMember) => {
         .catch((err) => `GUILDMEMBERREMOVE-MEMBER_FETCH: ${err}`);
 
       if (roleToRemove && mainServerMember) {
-        let roleResolvable = await mainServer.roles.fetch(roleToRemove.id);
+        let roleResolvable = await mainServer.roles
+          .fetch(roleToRemove.id)
+          .catch((err) => `GUILDMEMBERREMOVE_ROLE_FETCH: ${err}`);
         await mainServerMember.roles
           .remove(roleResolvable)
           .catch((err) => `GUILDMEMBERREMOVE_ROLE: ${err}`);
-        logChannel.send(
-          `Removing roles from: ${mainServerMember.user.username} in server: ${mainServer.name} since they left a synced server: ${removedMember.guild.name}`
-        );
+        await logChannel
+          .send(
+            `Removing roles from: ${mainServerMember.user.username} in server: ${mainServer.name} since they left a synced server: ${removedMember.guild.name}`
+          )
+          .catch((err) => `GUILDMEMBERREMOVE_LOGCHANNEL_SEND: ${err}`);
       }
     }
   }
